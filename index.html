@@ -1,143 +1,203 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>瀑布流展示照片</title>
-		<link rel="stylesheet" href="styles.css">
+		<title>Image Gallery</title>
+		<style>
+			body {
+				margin: 0;
+				font-family: Arial, sans-serif;
+			}
+
+			#face {
+				display: flex;
+				flex-wrap: wrap;
+				padding: 10px;
+			}
+
+			.image-container {
+				width: 128px;
+				height: 128px;
+				margin: 5px;
+				border-radius: 16px;
+				overflow: hidden;
+				transition: transform 0.2s ease, box-shadow 0.2s ease;
+			}
+
+			.image-container img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				cursor: pointer;
+			}
+
+			.image-container img:hover {
+				transform: scale(1.1);
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+			}
+
+			#face_photo {
+				display: none;
+				padding: 20px;
+			}
+
+			#face_photo div {
+				margin-bottom: 20px;
+			}
+
+			.black-box {
+				width: 500px;
+				height: 500px;
+				background-color: black;
+			}
+		</style>
 	</head>
-	<style>
-		/* styles.css */
-
-		body {
-			font-family: Arial, sans-serif;
-			margin: 0;
-			padding: 0;
-			background-color: #f7f7f7;
-			overflow-x: hidden;
-			/* 隐藏多余的横向滚动 */
-		}
-
-		.masonry {
-			display: flex;
-			flex-wrap: nowrap;
-			gap: 10px;
-			justify-content: flex-start;
-			animation: scrollImages 20s linear infinite;
-			/* 默认的滚动动画 */
-		}
-
-		.masonry img {
-			width: 128px;
-			/* 图片宽度 */
-			height: 128px;
-			/* 图片高度 */
-			margin-bottom: 10px;
-			border-radius: 8px;
-			transition: transform 0.3s ease;
-		}
-
-		/* 图片悬停时放大 */
-		.masonry img:hover {
-			transform: scale(1.05);
-		}
-
-		/* 定义右向左滚动动画 */
-		@keyframes scrollImages {
-			0% {
-				transform: translateX(100%);
-				/* 从右侧开始 */
-			}
-
-			100% {
-				transform: translateX(-100%);
-				/* 滚动到左侧 */
-			}
-		}
-	</style>
 	<body>
-		<div id="face" class="masonry">
-			<!-- 瀑布流图片会插入到这里 -->
-		</div>
+		<div id="face"></div>
+		<div id="face_photo"></div>
 
 		<script>
-			// script.js
-			// 步骤1: 定义名字数组
-			// 步骤1: 定义名字数组
 			const names = ["a000", "a001", "a002", "a003", "a004", "a005", "a006", "a007", "a008", "a009", "a010", "a011",
 				"a012", "a015", "a016", "a018", "awt", "bic", "bin", "biz", "bun", "ckg", "ecg", "ecz", "har", "hit", "hiz",
 				"hyu", "iga", "ina", "iwm", "iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not",
 				"oki", "osu", "oum", "owa", "sag", "san", "sim", "sin", "smu", "sur", "taj", "tnb", "tos", "wak", "ymt",
 				"yzm"
 			];
-			// 步骤2: 使用 map() 方法创建目标格式的数组
-			const formattedNames = names.map(name => `face/f_${name}.png`);
 
-			// 输出结果
-			//console.log(formattedNames);
-			// script.js
+			// 格式化图片路径
+			const Character_avatar = names.map(name => `face/f_${name}.png`); //角色头像
+			const Character_skill = names.map(name => `skill/c_${name}.png`); //角色头像
+			// 通过JavaScript动态加载图片
+			function loadImages() {
+				//const images_Character_avatar = Character_avatar;
+				const faceDiv = document.getElementById('face');
+				Character_avatar.forEach((image, index) => {
+					const container = document.createElement('div');
+					container.classList.add('image-container');
+					container.id = names[index]; // 设置 div 的 id 为对应的 names 值
 
-			document.addEventListener("DOMContentLoaded", function() {
-				const faceContainer = document.getElementById("face");
+					const imgElement = document.createElement('img');
+					imgElement.src = image;
 
-				// 假设已经有一个图片路径数组
-				const photos = formattedNames;
+					// 图片加载失败时，隐藏该区域
+					imgElement.onerror = function() {
+						container.style.display = 'none'; // 隐藏图片容器
+					};
 
-				let loadedPhotos = []; // 用于存储已经加载的图片路径
-				let animationDuration = 20; // 默认的动画时长为20秒
-				let scrollTimeout; // 用于延时恢复滚动速度
+					// 点击图片时的处理
+					imgElement.onclick = function() {
+						showFacePhoto(container); // 传递包含id的container
+					};
 
-				// 动态加载图片
-				function loadImages() {
-					// 这里只加载下一批图片
-					const remainingPhotos = photos.filter(photo => !loadedPhotos.includes(photo));
-
-					remainingPhotos.slice(0, 10).forEach(photo => { // 每次加载10张图片
-						const imgElement = document.createElement("img");
-						imgElement.src = photo;
-						imgElement.alt = "Photo";
-						imgElement.onload = function() {
-							faceContainer.appendChild(imgElement);
-							loadedPhotos.push(photo); // 加载完成后记录已加载的图片
-						};
-						imgElement.onerror = function() {
-							console.error(`Failed to load image: ${photo}`);
-						};
-					});
-				}
-
-				// 初始化加载图片
-				loadImages();
-
-				// 鼠标悬停时暂停滚动
-				faceContainer.addEventListener("mouseenter", function() {
-					faceContainer.style.animationPlayState = "paused"; // 暂停动画
+					container.appendChild(imgElement);
+					faceDiv.appendChild(container);
 				});
+			}
 
-				// 鼠标离开时恢复滚动
-				faceContainer.addEventListener("mouseleave", function() {
-					faceContainer.style.animationPlayState = "running"; // 恢复动画
-				});
+			// 显示 face_photo 和相关内容
+			function showFacePhoto(container) {
+				// 隐藏 #face 窗口
+				document.getElementById('face').style.display = 'none';
 
-				// 鼠标滚轮事件：加快或减慢滚动速度
-				faceContainer.addEventListener("wheel", function(event) {
-					// 如果滚动向下（加快滚动速度）
-					if (event.deltaY > 0) {
-						animationDuration = Math.max(5, animationDuration - 1); // 最小为5秒
-					} else if (event.deltaY < 0) {
-						animationDuration = Math.min(40, animationDuration + 1); // 最大为40秒
-					}
+				// 获取 face_photo 容器
+				const facePhoto = document.getElementById('face_photo');
+				facePhoto.style.display = 'block';
 
-					// 更新动画时长
-					faceContainer.style.animationDuration = `${animationDuration}s`;
+				// 创建第一行 div：显示技能图片居中
+				const firstRowDiv = document.createElement('div');
+				firstRowDiv.style.display = 'flex';
+				firstRowDiv.style.justifyContent = 'center'; // 技能图片居中
 
-					// 如果滚动持续，则延迟恢复默认速度
-					clearTimeout(scrollTimeout); // 清除之前的延时恢复
-					scrollTimeout = setTimeout(() => {
-						faceContainer.style.animationDuration = "20s"; // 恢复到默认速度
-					}, 1000); // 1秒后恢复
-				});
-			});
+				const skillImageContainer = document.createElement('div');
+				const image_Character_skill = document.createElement('img');
+				const skillImageSrc = Character_skill[names.indexOf(container.id)];
+				image_Character_skill.src = skillImageSrc; // 使用对应的技能图片
+
+				// 设置技能图片原始尺寸
+				image_Character_skill.style.maxWidth = 'none'; // 不限制技能图片的宽度
+				image_Character_skill.style.maxHeight = 'none'; // 不限制技能图片的高度
+				image_Character_skill.style.objectFit = 'contain'; // 保持原始比例
+
+				// 图片加载失败时的处理
+				image_Character_skill.onerror = function() {
+					// 创建灰色区域并替代失败的图片
+					const errorMessageContainer = document.createElement('div');
+					errorMessageContainer.style.width = '1024px';
+					errorMessageContainer.style.height = '128px';
+					errorMessageContainer.style.backgroundColor = 'gray';
+					errorMessageContainer.style.display = 'flex';
+					errorMessageContainer.style.alignItems = 'center';
+					errorMessageContainer.style.justifyContent = 'center';
+					errorMessageContainer.style.color = 'white';
+					errorMessageContainer.style.fontSize = '16px';
+					errorMessageContainer.style.textAlign = 'center';
+					errorMessageContainer.textContent = "加载失败或该角色不存在该图";
+
+					skillImageContainer.appendChild(errorMessageContainer);
+					firstRowDiv.appendChild(skillImageContainer);
+
+					// 隐藏失败的技能图
+					image_Character_skill.style.display = 'none';
+				};
+
+				// 正常情况下显示技能图片
+				skillImageContainer.appendChild(image_Character_skill);
+				firstRowDiv.appendChild(skillImageContainer);
+
+				// 创建第二行 div：显示头像图片并靠左
+				const secondRowDiv = document.createElement('div');
+				secondRowDiv.style.display = 'flex';
+				secondRowDiv.style.justifyContent = 'flex-start'; // 头像靠左对齐
+
+				const imageContainer = document.createElement('div');
+				const image_Character_avatar = document.createElement('img');
+				image_Character_avatar.src = container.querySelector('img').src; // 使用点击的头像图片
+
+				// 设置头像图片（保持原始大小）
+				image_Character_avatar.style.maxWidth = '128px'; // 保持最大宽度
+				image_Character_avatar.style.maxHeight = '128px'; // 保持最大高度
+				image_Character_avatar.style.objectFit = 'contain'; // 保持原始比例
+
+				// 将头像图片添加到容器
+				imageContainer.appendChild(image_Character_avatar);
+				secondRowDiv.appendChild(imageContainer);
+
+				// 创建第三个 div：显示该图片的 id
+				const thirdDiv = document.createElement('div');
+				thirdDiv.textContent = `${container.id}`; // 显示 id
+
+				// 创建第四个 div：黑色的 500px * 500px 的 div
+				const fourthDiv = document.createElement('div');
+				fourthDiv.classList.add('black-box');
+
+				// 将这四个 div 加入到 face_photo 中
+				facePhoto.appendChild(firstRowDiv); // 第一行技能图片
+				facePhoto.appendChild(secondRowDiv); // 第二行头像图片
+				facePhoto.appendChild(thirdDiv); // id
+				facePhoto.appendChild(fourthDiv); // 黑色 div
+
+				// 点击左上角头像恢复初始状态
+				imageContainer.onclick = function() {
+					resetToDefault();
+				};
+			}
+
+
+			// 恢复初始状态
+			function resetToDefault() {
+				// 隐藏 face_photo
+				document.getElementById('face_photo').style.display = 'none';
+
+				// 显示 face
+				document.getElementById('face').style.display = 'flex';
+
+				// 清空 face_photo 内容
+				document.getElementById('face_photo').innerHTML = '';
+			}
+
+			// 页面加载时调用loadImages函数
+			window.onload = loadImages;
 		</script>
 	</body>
 </html>
