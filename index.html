@@ -67,10 +67,9 @@
 
 			// 格式化图片路径
 			const Character_avatar = names.map(name => `face/f_${name}.png`); //角色头像
-			const Character_skill = names.map(name => `skill/c_${name}.png`); //角色头像
+			const Character_skill = names.map(name => `skill/c_${name}.png`); //角色技能图
 			// 通过JavaScript动态加载图片
 			function loadImages() {
-				//const images_Character_avatar = Character_avatar;
 				const faceDiv = document.getElementById('face');
 				Character_avatar.forEach((image, index) => {
 					const container = document.createElement('div');
@@ -104,11 +103,28 @@
 				const facePhoto = document.getElementById('face_photo');
 				facePhoto.style.display = 'block';
 
-				// 创建第一行 div：显示技能图片居中
+				// 创建第一行 div：头像、技能图和灰色区域在同一行，头像靠左，技能图居中
 				const firstRowDiv = document.createElement('div');
-				firstRowDiv.style.display = 'flex';
-				firstRowDiv.style.justifyContent = 'center'; // 技能图片居中
+				firstRowDiv.style.position = 'relative'; // 设置父容器为相对定位
+				firstRowDiv.style.whiteSpace = 'nowrap'; // 确保内容在同一行
+				firstRowDiv.style.height = '128px'; // 设置父容器的高度，与头像和技能图相同
 
+				// 头像（靠左）
+				const avatarContainer = document.createElement('div');
+				const image_Character_avatar = document.createElement('img');
+				image_Character_avatar.src = container.querySelector('img').src; // 使用点击的头像图片
+
+				// 设置头像图片（保持原始大小）
+				image_Character_avatar.style.maxWidth = '128px'; // 保持最大宽度
+				image_Character_avatar.style.maxHeight = '128px'; // 保持最大高度
+				image_Character_avatar.style.objectFit = 'contain'; // 保持原始比例
+				avatarContainer.style.position = 'absolute'; // 设置为绝对定位
+				avatarContainer.style.left = '0'; // 头像靠左
+
+				// 将头像图片添加到容器
+				avatarContainer.appendChild(image_Character_avatar);
+
+				// 技能图容器
 				const skillImageContainer = document.createElement('div');
 				const image_Character_skill = document.createElement('img');
 				const skillImageSrc = Character_skill[names.indexOf(container.id)];
@@ -121,49 +137,24 @@
 
 				// 图片加载失败时的处理
 				image_Character_skill.onerror = function() {
-					// 创建灰色区域并替代失败的图片
-					const errorMessageContainer = document.createElement('div');
-					errorMessageContainer.style.width = '1024px';
-					errorMessageContainer.style.height = '128px';
-					errorMessageContainer.style.backgroundColor = 'gray';
-					errorMessageContainer.style.display = 'flex';
-					errorMessageContainer.style.alignItems = 'center';
-					errorMessageContainer.style.justifyContent = 'center';
-					errorMessageContainer.style.color = 'white';
-					errorMessageContainer.style.fontSize = '16px';
-					errorMessageContainer.style.textAlign = 'center';
-					errorMessageContainer.textContent = "加载失败或该角色不存在该图";
-
-					skillImageContainer.appendChild(errorMessageContainer);
-					firstRowDiv.appendChild(skillImageContainer);
-
-					// 隐藏失败的技能图
-					image_Character_skill.style.display = 'none';
+					// 加载 error_skill.png 图片代替
+					image_Character_skill.src = 'skill/error_skill.png';
 				};
 
 				// 正常情况下显示技能图片
+				skillImageContainer.style.position = 'absolute'; // 使用绝对定位
+				skillImageContainer.style.left = '50%'; // 将技能图容器的左边缘对齐到父容器的中央
+				skillImageContainer.style.transform = 'translateX(-50%)'; // 通过translateX使技能图水平居中
 				skillImageContainer.appendChild(image_Character_skill);
-				firstRowDiv.appendChild(skillImageContainer);
 
-				// 创建第二行 div：显示头像图片并靠左
-				const secondRowDiv = document.createElement('div');
-				secondRowDiv.style.display = 'flex';
-				secondRowDiv.style.justifyContent = 'flex-start'; // 头像靠左对齐
+				// 将头像和技能图容器加入到父容器
+				firstRowDiv.appendChild(avatarContainer); // 头像在左
+				firstRowDiv.appendChild(skillImageContainer); // 技能图居中
 
-				const imageContainer = document.createElement('div');
-				const image_Character_avatar = document.createElement('img');
-				image_Character_avatar.src = container.querySelector('img').src; // 使用点击的头像图片
+				// 将 this firstRowDiv 加入到 face_photo 中
+				facePhoto.appendChild(firstRowDiv); // 第一行头像和技能图
 
-				// 设置头像图片（保持原始大小）
-				image_Character_avatar.style.maxWidth = '128px'; // 保持最大宽度
-				image_Character_avatar.style.maxHeight = '128px'; // 保持最大高度
-				image_Character_avatar.style.objectFit = 'contain'; // 保持原始比例
-
-				// 将头像图片添加到容器
-				imageContainer.appendChild(image_Character_avatar);
-				secondRowDiv.appendChild(imageContainer);
-
-				// 创建第三个 div：显示该图片的 id
+				// 创建第二个 div：显示该图片的 id
 				const thirdDiv = document.createElement('div');
 				thirdDiv.textContent = `${container.id}`; // 显示 id
 
@@ -172,17 +163,14 @@
 				fourthDiv.classList.add('black-box');
 
 				// 将这四个 div 加入到 face_photo 中
-				facePhoto.appendChild(firstRowDiv); // 第一行技能图片
-				facePhoto.appendChild(secondRowDiv); // 第二行头像图片
 				facePhoto.appendChild(thirdDiv); // id
 				facePhoto.appendChild(fourthDiv); // 黑色 div
 
 				// 点击左上角头像恢复初始状态
-				imageContainer.onclick = function() {
+				avatarContainer.onclick = function() {
 					resetToDefault();
 				};
 			}
-
 
 			// 恢复初始状态
 			function resetToDefault() {
