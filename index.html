@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>瀑布流展示照片</title>
+		<link rel="stylesheet" href="styles.css">
+	</head>
+	<style>
+		/* styles.css */
+
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			background-color: #f7f7f7;
+			overflow-x: hidden;
+			/* 隐藏多余的横向滚动 */
+		}
+
+		.masonry {
+			display: flex;
+			flex-wrap: nowrap;
+			gap: 10px;
+			justify-content: flex-start;
+			animation: scrollImages 20s linear infinite;
+			/* 默认的滚动动画 */
+		}
+
+		.masonry img {
+			width: 128px;
+			/* 图片宽度 */
+			height: 128px;
+			/* 图片高度 */
+			margin-bottom: 10px;
+			border-radius: 8px;
+			transition: transform 0.3s ease;
+		}
+
+		/* 图片悬停时放大 */
+		.masonry img:hover {
+			transform: scale(1.05);
+		}
+
+		/* 定义右向左滚动动画 */
+		@keyframes scrollImages {
+			0% {
+				transform: translateX(100%);
+				/* 从右侧开始 */
+			}
+
+			100% {
+				transform: translateX(-100%);
+				/* 滚动到左侧 */
+			}
+		}
+	</style>
+	<body>
+		<div id="face" class="masonry">
+			<!-- 瀑布流图片会插入到这里 -->
+		</div>
+
+		<script>
+			// script.js
+			// 步骤1: 定义名字数组
+			// 步骤1: 定义名字数组
+			const names = ["a000", "a001", "a002", "a003", "a004", "a005", "a006", "a007", "a008", "a009", "a010", "a011",
+				"a012", "a015", "a016", "a018", "awt", "bic", "bin", "biz", "bun", "ckg", "ecg", "ecz", "har", "hit", "hiz",
+				"hyu", "iga", "ina", "iwm", "iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not",
+				"oki", "osu", "oum", "owa", "sag", "san", "sim", "sin", "smu", "sur", "taj", "tnb", "tos", "wak", "ymt",
+				"yzm"
+			];
+			// 步骤2: 使用 map() 方法创建目标格式的数组
+			const formattedNames = names.map(name => `face/f_${name}.png`);
+
+			// 输出结果
+			//console.log(formattedNames);
+			// script.js
+
+			document.addEventListener("DOMContentLoaded", function() {
+				const faceContainer = document.getElementById("face");
+
+				// 假设已经有一个图片路径数组
+				const photos = formattedNames;
+
+				let loadedPhotos = []; // 用于存储已经加载的图片路径
+				let animationDuration = 20; // 默认的动画时长为20秒
+				let scrollTimeout; // 用于延时恢复滚动速度
+
+				// 动态加载图片
+				function loadImages() {
+					// 这里只加载下一批图片
+					const remainingPhotos = photos.filter(photo => !loadedPhotos.includes(photo));
+
+					remainingPhotos.slice(0, 10).forEach(photo => { // 每次加载10张图片
+						const imgElement = document.createElement("img");
+						imgElement.src = photo;
+						imgElement.alt = "Photo";
+						imgElement.onload = function() {
+							faceContainer.appendChild(imgElement);
+							loadedPhotos.push(photo); // 加载完成后记录已加载的图片
+						};
+						imgElement.onerror = function() {
+							console.error(`Failed to load image: ${photo}`);
+						};
+					});
+				}
+
+				// 初始化加载图片
+				loadImages();
+
+				// 鼠标悬停时暂停滚动
+				faceContainer.addEventListener("mouseenter", function() {
+					faceContainer.style.animationPlayState = "paused"; // 暂停动画
+				});
+
+				// 鼠标离开时恢复滚动
+				faceContainer.addEventListener("mouseleave", function() {
+					faceContainer.style.animationPlayState = "running"; // 恢复动画
+				});
+
+				// 鼠标滚轮事件：加快或减慢滚动速度
+				faceContainer.addEventListener("wheel", function(event) {
+					// 如果滚动向下（加快滚动速度）
+					if (event.deltaY > 0) {
+						animationDuration = Math.max(5, animationDuration - 1); // 最小为5秒
+					} else if (event.deltaY < 0) {
+						animationDuration = Math.min(40, animationDuration + 1); // 最大为40秒
+					}
+
+					// 更新动画时长
+					faceContainer.style.animationDuration = `${animationDuration}s`;
+
+					// 如果滚动持续，则延迟恢复默认速度
+					clearTimeout(scrollTimeout); // 清除之前的延时恢复
+					scrollTimeout = setTimeout(() => {
+						faceContainer.style.animationDuration = "20s"; // 恢复到默认速度
+					}, 1000); // 1秒后恢复
+				});
+			});
+		</script>
+	</body>
+</html>
