@@ -161,7 +161,7 @@
 				"yzm"
 			];
 			//角色缩略图
-			const Character_thumbnail = names.map(name => `face/f_${name}.png`);
+			const Character_thumbnail = names.map(name => `overview/f_${name}.png`);
 			//角色技能图
 			const Character_skill = names.map(name => `skill/c_${name}.png`);
 			// 角色表情图
@@ -170,15 +170,15 @@
 				return Array.from({
 						length: 21
 					}, (_, number) =>
-					`def_face/s_${name}_def_face_${String(number).padStart(2, '0')}.png`
+					`face/s_${name}_def_face_${String(number).padStart(2, '0')}.png`
 				);
 			});
 			//角色身体图-站姿
-			const Character_def_body = names.map(name => `def_body/s_${name}_def_body.png`);
+			const Character_def_body = names.map(name => `body/s_${name}_def_body.png`);
 			//角色身体图-战斗
-			const Character_b_def_body = names.map(name => `def_body/b_${name}_def_body.png`);
+			const Character_b_def_body = names.map(name => `body/b_${name}_def_body.png`);
 			//角色身体图-战损
-			const Character_def_dbody = names.map(name => `def_dbody/s_${name}_def_dbody.png`);
+			const Character_def_dbody = names.map(name => `body/s_${name}_def_dbody.png`);
 			// 通过JavaScript动态加载图片
 			function loadImages() {
 				const faceDiv = document.getElementById('face');
@@ -295,6 +295,7 @@
 				defFaceContainer.classList.add('def-face-container'); // 为容器添加类名
 				// 获取当前角色的所有默认表情图片路径
 				const faces = Character_def_face.filter(path => path.includes(container.id));
+				console.log(faces);
 				// 为每个表情图片创建 img 元素并添加到容器中
 				faces.forEach(face => {
 					const imgElement = document.createElement('img');

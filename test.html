@@ -1,310 +1,238 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 	<head>
-		<meta charset="UTF-8">
+		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Image Gallery</title>
-		<style>
-			body {
-				margin: 0;
-				font-family: Arial, sans-serif;
-			}
+		<title>nijitama角色收集</title>
+	</head>
+	<style>
+		/* 默认样式 */
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+		html, body {
+		    overflow-x: hidden;
+		}
+		#character-overview {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+			gap: 10px;
+			/* 增加图片之间的间距 */
+			padding: 5px;
+			/* 为容器添加内边距，避免图片紧挨着边缘 */
+		}
 
-			#face {
-				display: flex;
-				flex-wrap: wrap;
-				padding: 10px;
-			}
+		#character-overview img {
+			width: 128px;
+			height: 128px;
+			object-fit: cover;
+			transition: transform 0.2s ease, filter 0.2s ease;
+			cursor: pointer;
+		}
 
-			.image-container {
-				width: 128px;
-				height: 128px;
-				margin: 5px;
-				border-radius: 16px;
-				overflow: hidden;
-				transition: transform 0.2s ease, box-shadow 0.2s ease;
-			}
+		#character-overview img:hover {
+			transform: scale(1.1);
+		}
 
-			.image-container img {
+		#character-overview img.failed {
+			display: none;
+		}
+
+		/* 居中技能图、头像和表情图 */
+		#character-avatar,
+		#character-skill,
+		#character-def-face {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			padding: 10px;
+			/* 为每个容器添加内边距，避免图片与容器边缘紧挨着 */
+			margin-bottom: 5px;
+			/* 容器底部增加间距 */
+		}
+
+		#character-avatar img,
+		#character-skill img,
+		#character-def-face img {
+			max-width: 100%;
+			max-height: 100%;
+			object-fit: contain;
+			/* 保持图片的宽高比 */
+		}
+
+		#character-def-face {
+		    display: flex;
+		    flex-wrap: wrap;  /* 允许换行 */
+		    gap: 5px;  /* 设置图片之间的间距为5px */
+		    justify-content: center;  /* 水平居中 */
+		    padding: 5px;  /* 给容器添加内边距，避免图片紧挨着容器边缘 */
+		    width: 100%;
+		}
+		
+		#character-def-face img {
+		    width: auto;  /* 保持原图宽度 */
+		    height: auto;  /* 保持原图高度 */
+		    max-width: 100%;  /* 确保图片在父容器中不超出范围 */
+		    max-height: 100%;  /* 确保图片在父容器中不超出范围 */
+		    object-fit: contain;  /* 保持图片的宽高比 */
+		}
+
+
+
+		/* 当在手机上查看时，技能图宽度等于手机宽度 */
+		@media (max-width: 768px) {
+			#character-skill img {
 				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				cursor: pointer;
+				/* 让技能图宽度等于手机宽度 */
+				height: auto;
+				/* 保持宽高比 */
 			}
 
-			.image-container img:hover {
-				transform: scale(1.1);
-				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+			/* 确保每行至少有 3 张图片 */
+			#character-def-face {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+				gap: 20px;
+				/* 增加表情图之间的间距 */
+				width: 100%;
 			}
 
-			#face_photo {
-				display: none;
-				padding: 20px;
-			}
-
-			#face_photo div {
-				margin-bottom: 20px;
-			}
-
-			/* 头像和技能图样式 */
-			.first-row {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-			}
-
-			.skill-image-container {
-				text-align: center;
-			}
-
-			.avatar-container {
-				margin-top: 10px;
-				text-align: left;
-			}
-
-			/* 桌面版样式 */
-			.skill-image-container img {
-				width: auto;
+			#character-def-face img {
+				width: 100%;
 				height: auto;
 				max-width: none;
-				max-height: none;
-				object-fit: contain;
+				/* 取消最大宽度的限制 */
 			}
+		}
+	</style>
+	<script>
+		const names = ["a000", "a001", "a002", "a003", "a004", "a005", "a006", "a007", "a008", "a009", "a010", "a011",
+			"a012", "a015", "a016", "a018", "awt", "bic", "bin", "biz", "bun", "ckg", "ecg", "ecz", "har", "hit", "hiz",
+			"hyu", "iga", "ina", "iwm", "iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not",
+			"oki", "osu", "oum", "owa", "sag", "san", "sim", "sin", "smu", "sur", "taj", "tnb", "tos", "wak", "ymt",
+			"yzm"
+		];
 
-			.avatar-container img {
-				max-width: 128px;
-				max-height: 128px;
-				object-fit: contain;
-			}
+		//角色概览
+		const Character_overview = names.map(name => `overview/f_${name}.png`);
+		//角色技能图
+		const Character_skill = names.map(name => `skill/c_${name}.png`);
+		//角色表情图
+		const Character_def_face = names.flatMap(name => {
+			return Array.from({
+					length: 21
+				}, (_, number) =>
+				`face/s_${name}_def_face_${String(number).padStart(2, '0')}.png`
+			);
+		});
+		//角色身体图-站姿
+		const Character_def_body = names.map(name => `def_body/s_${name}_def_body.png`);
+		//角色身体图-战斗
+		const Character_b_def_body = names.map(name => `def_body/b_${name}_def_body.png`);
+		//角色身体图-战损
+		const Character_b_def_dbody = names.map(name => `def_dbody/b_${name}_aw_dbody.png`);
+		//角色浴室图
+		const Character_barh = names.map(name => `def_dbody/s_${name}_bath_body.png`);
+		//角色赞助图
+		const Character_patronag = names.map(name => `def_dbody/s_${name}_pa_body.png`);
+		//角色泳装
+		const Character_swim = names.map(name => `def_dbody/s_${name}_swim_body.png`);
+		//角色圣诞节
+		const Character_christmas = names.map(name => `def_dbody/s_${name}_xmas_body.png`);
 
-			/* 手机版样式 */
-			@media (max-width: 768px) {
+		// 加载角色概览图
+		function LoadOverview() {
+			const overviewDiv = document.getElementById('character-overview');
+			// 清空概览区域
+			overviewDiv.innerHTML = '';
 
-				/* 使技能图宽度为手机宽度，保持宽高比 */
-				.skill-image-container img {
-					width: 100%;
-					height: auto;
-				}
+			Character_overview.forEach((src, index) => {
+				const name = names[index]; // 获取对应的name
+				const img = document.createElement('img');
+				img.src = src;
+				img.alt = `Character Overview of ${name}`;
+				img.id = name; // 设置id为对应的name
 
-				/* 头像容器仍然保持128px */
-				.avatar-container img {
-					max-width: 128px;
-					max-height: 128px;
-					object-fit: contain;
-				}
+				// 如果图片加载失败，隐藏它
+				img.onerror = () => {
+					img.classList.add('failed'); // 添加一个类来隐藏图片
+				};
 
-				/* face_photo 内容内的黑色区域保持500px大小 */
-				.black-box {
-					width: 100%;
-					height: 500px;
-				}
+				// 添加点击事件，点击时将图片添加到 #character-avatar 和 #character-skill
+				img.onclick = () => {
+					const overviewDiv = document.getElementById('character-overview'); //所有角色概览图
+					const skillDiv = document.getElementById('character-skill'); //将技能图
+					const avatarDiv = document.getElementById('character-avatar'); //角色头像
+					const defFaceDiv = document.getElementById('character-def-face'); // 表情区域
 
-				/* 居中缩略图容器 */
-				#face {
-					justify-content: center;
-					flex-wrap: wrap;
-				}
+					// 将点击的概览图添加到 #character-avatar
+					avatarDiv.innerHTML = `<img src="${src}" alt="Character Avatar" />`;
 
-				/* 每行至少显示3个缩略图，并保持宽高比 */
-				.image-container {
-					width: calc(33.33% - 10px);
-					margin: 5px;
-					aspect-ratio: 1;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-				}
+					// 将对应的技能图添加到 #character-skill
+					const skillImg = document.createElement('img');
+					skillImg.src = Character_skill[index];
 
-				/* 确保图片充满容器并保持比例 */
-				.image-container img {
-					width: 100%;
-					height: 100%;
-					object-fit: cover;
-				}
+					// 设置技能图加载失败时替换为 error_skill.png
+					skillImg.onerror = () => {
+						skillImg.src = 'skill/error_skill.png'; // 如果技能图加载失败，替换为默认的错误图
+					};
+					skillImg.alt = `Character Skill of ${name}`;
+					skillDiv.innerHTML = ''; // 清空技能区域
+					skillDiv.appendChild(skillImg);
 
-				/* 默认表情图样式 */
-				.def-face-container {
-					display: flex;
-					flex-wrap: wrap;
-					justify-content: space-between;
-					gap: 5px; /* 增加图片间的间隔 */
-				}
+					// 加载表情图
+					defFaceDiv.innerHTML = ''; // 清空表情区域
+					Character_def_face.slice(index * 21, (index + 1) * 21).forEach(faceSrc => {
+						const faceImg = document.createElement('img');
+						faceImg.src = faceSrc;
 
-				/* 每个表情图至少占屏幕的三分之一 */
-				.def-face-container img {
-					width: calc(33.33% - 5px); /* 每个表情图占屏幕宽度的三分之一 */
-					object-fit: contain; /* 保持原图比例 */
-				}
-			}
-		</style>
-	</head>
+						// 检查图片是否加载成功
+						faceImg.onerror = () => {
+							faceImg.style.display = 'none'; // 如果图片加载失败，则隐藏它
+						};
+
+						defFaceDiv.appendChild(faceImg);
+					});
+
+					// 隐藏 #character-overview
+					overviewDiv.style.display = 'none';
+
+					// 给 avatar 中的图片添加点击事件恢复页面
+					const avatarImg = avatarDiv.querySelector('img');
+					avatarImg.onclick = () => {
+						// 恢复页面
+						overviewDiv.style.display = 'grid'; // 显示概览图
+						avatarDiv.innerHTML = ''; // 清空 avatar 区域
+						skillDiv.innerHTML = ''; // 清空技能区域
+						defFaceDiv.innerHTML = ''; // 清空表情区域
+					};
+				};
+
+				// 将图片添加到概览区域
+				overviewDiv.appendChild(img);
+			});
+		}
+
+
+
+		// 页面加载完成后调用 LoadOverview 方法
+		window.onload = LoadOverview;
+	</script>
 	<body>
-		<div id="face"></div>
-		<div id="face_photo"></div>
-		<script>
-		    const names = ["a000", "a001", "a002", "a003", "a004", "a005", "a006", "a007", "a008", "a009", "a010", "a011",
-		        "a012", "a015", "a016", "a018", "awt", "bic", "bin", "biz", "bun", "ckg", "ecg", "ecz", "har", "hit", "hiz",
-		        "hyu", "iga", "ina", "iwm", "iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not",
-		        "oki", "osu", "oum", "owa", "sag", "san", "sim", "sin", "smu", "sur", "taj", "tnb", "tos", "wak", "ymt",
-		        "yzm"
-		    ];
-		
-		    // 角色缩略图
-		    const Character_thumbnail = names.map(name => `face/f_${name}.png`);
-		    // 角色技能图
-		    const Character_skill = names.map(name => `skill/c_${name}.png`);
-		    // 角色默认表情
-		    const Character_def_face = names.flatMap(name => {
-		        // 生成从 00 到 20 的编号
-		        return Array.from({ length: 21 }, (_, number) =>
-		            `def_face/s_${name}_def_face_${String(number).padStart(2, '0')}.png`
-		        );
-		    });
-		
-		    // 通过JavaScript动态加载图片
-		    function loadImages() {
-		        const faceDiv = document.getElementById('face');
-		        Character_thumbnail.forEach((image, index) => {
-		            const container = document.createElement('div');
-		            container.classList.add('image-container');
-		            container.id = names[index]; // 设置 div 的 id 为对应的 names 值
-		
-		            const imgElement = document.createElement('img');
-		            imgElement.src = image;
-		
-		            // 图片加载失败时，隐藏该区域
-		            imgElement.onerror = function() {
-		                container.style.display = 'none'; // 隐藏图片容器
-		            };
-		
-		            // 点击图片时的处理
-		            imgElement.onclick = function() {
-		                showFacePhoto(container); // 传递包含id的container
-		            };
-		
-		            container.appendChild(imgElement);
-		            faceDiv.appendChild(container);
-		
-		            // 在头像下面添加默认表情图片
-		            addDefaultFaces(container);
-		        });
-		    }
-		
-		    // 添加角色默认表情图片
-		    function addDefaultFaces(container) {
-		        const name = container.id; // 获取当前头像的名称
-		        const faceContainer = document.createElement('div'); // 创建一个新容器来包裹表情图片
-		
-		        // 获取当前角色的所有默认表情图片
-		        const faces = Character_def_face.filter(path => path.includes(name));
-		
-		        // 为每个默认表情图片创建 img 元素并添加到容器中
-		        faces.forEach(face => {
-		            const imgElement = document.createElement('img');
-		            imgElement.src = face;
-		
-		            // 保持原图大小
-		            imgElement.style.objectFit = 'contain'; // 保证图片按比例显示
-		            imgElement.style.margin = '5px'; // 图片之间的间距
-		
-		            // 图片加载失败时的处理，隐藏该图片
-		            imgElement.onerror = function() {
-		                imgElement.style.display = 'none'; // 隐藏加载失败的图片
-		            };
-		
-		            faceContainer.appendChild(imgElement);
-		        });
-		
-		        // 将表情图片容器添加到头像容器下面
-		        container.appendChild(faceContainer);
-		    }
-		
-		    // 显示 face_photo 和相关内容
-		    function showFacePhoto(container) {
-		        // 隐藏 #face 窗口
-		        document.getElementById('face').style.display = 'none';
-		
-		        // 获取 face_photo 容器
-		        const facePhoto = document.getElementById('face_photo');
-		        facePhoto.style.display = 'block';
-		
-		        // 创建第一行 div：头像和技能图分开，不在同一行
-		        const firstRowDiv = document.createElement('div');
-		        firstRowDiv.classList.add('first-row'); // 使用新的 class 来定义垂直排列
-		
-		        // 技能图容器
-		        const skillImageContainer = document.createElement('div');
-		        skillImageContainer.classList.add('skill-image-container');
-		        const image_Character_skill = document.createElement('img');
-		        const skillImageSrc = Character_skill[names.indexOf(container.id)];
-		        image_Character_skill.src = skillImageSrc; // 使用对应的技能图片
-		
-		        // 设置技能图片原始尺寸
-		        image_Character_skill.style.maxWidth = 'none'; // 不限制技能图片的宽度
-		        image_Character_skill.style.maxHeight = 'none'; // 不限制技能图片的高度
-		        image_Character_skill.style.objectFit = 'contain'; // 保持原始比例
-		
-		        // 图片加载失败时的处理
-		        image_Character_skill.onerror = function() {
-		            // 加载 error_skill.png 图片代替
-		            image_Character_skill.src = 'skill/error_skill.png';
-		        };
-		
-		        // 正常情况下显示技能图片
-		        skillImageContainer.appendChild(image_Character_skill);
-		
-		        // 头像容器
-		        const avatarContainer = document.createElement('div');
-		        avatarContainer.classList.add('avatar-container');
-		        const image_Character_avatar = document.createElement('img');
-		        image_Character_avatar.src = container.querySelector('img').src; // 使用点击的头像图片
-		
-		        // 设置头像图片（保持原始大小）
-		        image_Character_avatar.style.maxWidth = '128px'; // 保持最大宽度
-		        image_Character_avatar.style.maxHeight = '128px'; // 保持最大高度
-		        image_Character_avatar.style.objectFit = 'contain'; // 保持原始比例
-		
-		        // 将头像图片添加到容器
-		        avatarContainer.appendChild(image_Character_avatar);
-		
-		        // 将技能图容器和头像容器分别添加到 firstRowDiv 中
-		        firstRowDiv.appendChild(skillImageContainer); // 技能图容器
-		        firstRowDiv.appendChild(avatarContainer); // 头像容器
-		
-		        // 将第一行 div 加入到 face_photo 中
-		        facePhoto.appendChild(firstRowDiv); // 第一行技能图和头像
-		
-		        // 在技能图下面添加默认表情容器
-		        const defFaceContainer = document.createElement('div');
-		        defFaceContainer.classList.add('def-face-container'); // 为容器添加类名
-		
-		        // 获取当前角色的所有默认表情图片
-		        const faces = Character_def_face.filter(path => path.includes(container.id));
-		
-		        // 为每个默认表情图片创建 img 元素并添加到容器中
-		        faces.forEach(face => {
-		            const imgElement = document.createElement('img');
-		            imgElement.src = face;
-		
-		            // 保持原图大小
-		            imgElement.style.objectFit = 'contain'; // 保证图片按比例显示
-		            imgElement.style.margin = '5px'; // 图片之间的间距
-		
-		            // 图片加载失败时的处理，隐藏该图片
-		            imgElement.onerror = function() {
-		                imgElement.style.display = 'none'; // 隐藏加载失败的图片
-		            };
-		
-		            defFaceContainer.appendChild(imgElement);
-		        });
-		
-		        // 将默认表情容器添加到 face_photo 中
-		        facePhoto.appendChild(defFaceContainer);
-		    }
-		
-		    // 调用 loadImages 函数加载图片
-		    window.onload = loadImages;
-		</script>
-
+		<div id="character-overview"></div>
+		<div id="character-skill"></div>
+		<div id="character-avatar"></div>
+		<div id="character-def-face"></div>
+		<div id="character-default-body"></div>
+		<div id="character-default-body-fight"></div>
+		<div id="character-default-body-fight-injured"></div>
+		<div id="character-bath"></div>
+		<div id="character-patronag"></div>
+		<div id="character-swim"></div>
+		<div id="character-christmas"></div>
 	</body>
 </html>
