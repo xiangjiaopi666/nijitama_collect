@@ -295,7 +295,6 @@
 				defFaceContainer.classList.add('def-face-container'); // 为容器添加类名
 				// 获取当前角色的所有默认表情图片路径
 				const faces = Character_def_face.filter(path => path.includes(container.id));
-				console.log(faces);
 				// 为每个表情图片创建 img 元素并添加到容器中
 				faces.forEach(face => {
 					const imgElement = document.createElement('img');

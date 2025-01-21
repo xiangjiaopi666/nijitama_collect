@@ -6,106 +6,150 @@
 		<title>nijitama角色收集</title>
 	</head>
 	<style>
-		/* 默认样式 */
-		body {
-			font-family: Arial, sans-serif;
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-		}
-		html, body {
-		    overflow-x: hidden;
-		}
-		#character-overview {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
-			gap: 10px;
-			/* 增加图片之间的间距 */
-			padding: 5px;
-			/* 为容器添加内边距，避免图片紧挨着边缘 */
-		}
-
-		#character-overview img {
-			width: 128px;
-			height: 128px;
-			object-fit: cover;
-			transition: transform 0.2s ease, filter 0.2s ease;
-			cursor: pointer;
-		}
-
-		#character-overview img:hover {
-			transform: scale(1.1);
-		}
-
-		#character-overview img.failed {
+		/*加载失败的图片会被隐藏*/
+		.failed{
 			display: none;
 		}
-
-		/* 居中技能图、头像和表情图 */
-		#character-avatar,
-		#character-skill,
-		#character-def-face {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			width: 100%;
-			padding: 10px;
-			/* 为每个容器添加内边距，避免图片与容器边缘紧挨着 */
-			margin-bottom: 5px;
-			/* 容器底部增加间距 */
-		}
-
-		#character-avatar img,
-		#character-skill img,
-		#character-def-face img {
-			max-width: 100%;
-			max-height: 100%;
-			object-fit: contain;
-			/* 保持图片的宽高比 */
-		}
-
-		#character-def-face {
-		    display: flex;
-		    flex-wrap: wrap;  /* 允许换行 */
-		    gap: 5px;  /* 设置图片之间的间距为5px */
-		    justify-content: center;  /* 水平居中 */
-		    padding: 5px;  /* 给容器添加内边距，避免图片紧挨着容器边缘 */
-		    width: 100%;
+		body {
+			margin: 0;
+			font-family: Arial, sans-serif;
 		}
 		
-		#character-def-face img {
-		    width: auto;  /* 保持原图宽度 */
-		    height: auto;  /* 保持原图高度 */
-		    max-width: 100%;  /* 确保图片在父容器中不超出范围 */
-		    max-height: 100%;  /* 确保图片在父容器中不超出范围 */
-		    object-fit: contain;  /* 保持图片的宽高比 */
+		#Character_overview {
+			display: flex;
+			flex-wrap: wrap;
+			padding: 10px;
 		}
-
-
-
-		/* 当在手机上查看时，技能图宽度等于手机宽度 */
+		
+		.image-container {
+			width: 128px;
+			height: 128px;
+			margin: 5px;
+			border-radius: 16px;
+			overflow: hidden;
+			transition: transform 0.2s ease, box-shadow 0.2s ease;
+		}
+		
+		.image-container img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			cursor: pointer;
+		}
+		
+		.image-container img:hover {
+			transform: scale(1.1);
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		}
+		
+		#photo {
+			display: none;
+			padding: 20px;
+		}
+		
+		#photo div {
+			margin-bottom: 20px;
+		}
+		
+		/* 头像和技能图样式 */
+		.first-row {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+		
+		.skill-image-container {
+			text-align: center;
+		}
+		
+		.avatar-container {
+			margin-top: 10px;
+			text-align: left;
+		}
+		
+		/* 桌面版样式 */
+		.skill-image-container img {
+			width: auto;
+			height: auto;
+			max-width: none;
+			max-height: none;
+			object-fit: contain;
+		}
+		
+		.avatar-container img {
+			max-width: 128px;
+			max-height: 128px;
+			object-fit: contain;
+		}
+		
+		/* 手机版样式 */
 		@media (max-width: 768px) {
-			#character-skill img {
-				width: 100%;
-				/* 让技能图宽度等于手机宽度 */
-				height: auto;
-				/* 保持宽高比 */
-			}
-
-			/* 确保每行至少有 3 张图片 */
-			#character-def-face {
-				display: grid;
-				grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-				gap: 20px;
-				/* 增加表情图之间的间距 */
-				width: 100%;
-			}
-
-			#character-def-face img {
+		
+			/* 使技能图宽度为手机宽度，保持宽高比 */
+			.skill-image-container img {
 				width: 100%;
 				height: auto;
-				max-width: none;
-				/* 取消最大宽度的限制 */
+			}
+		
+			/* 头像容器仍然保持128px */
+			.avatar-container img {
+				max-width: 128px;
+				max-height: 128px;
+				object-fit: contain;
+			}
+		
+			/* photo 内容内的黑色区域保持500px大小 */
+			.black-box {
+				width: 100%;
+				height: 500px;
+			}
+		
+			/* 居中缩略图容器 */
+			#Character_overview {
+				justify-content: center;
+				flex-wrap: wrap;
+			}
+		
+			/* 每行至少显示3个缩略图，并保持宽高比 */
+			.image-container {
+				width: calc(33.33% - 10px);
+				margin: 5px;
+				aspect-ratio: 1;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+		
+			/* 确保图片充满容器并保持比例 */
+			.image-container img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+		
+			/* 默认表情图样式 */
+			.def-face-container {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+				gap: 1px;
+				/* 增加图片间的间隔 */
+			}
+		
+			/* 每个表情图至少占屏幕的三分之一 */
+			.def-face-container img {
+				width: calc(33.33% - 20px);
+				/* 每个表情图占屏幕宽度的三分之一 */
+				object-fit: contain;
+				/* 保持原图比例 */
+			}
+		
+			/* 默认身体图样式 */
+			.def-body-container img {
+				width: calc(100%);
+				/* 每个表情图占屏幕宽度的三分之一 */
+				object-fit: contain;
+				/* 保持原图比例 */
 			}
 		}
 	</style>
@@ -154,7 +198,6 @@
 				const name = names[index]; // 获取对应的name
 				const img = document.createElement('img');
 				img.src = src;
-				img.alt = `Character Overview of ${name}`;
 				img.id = name; // 设置id为对应的name
 
 				// 如果图片加载失败，隐藏它
@@ -205,7 +248,7 @@
 					const avatarImg = avatarDiv.querySelector('img');
 					avatarImg.onclick = () => {
 						// 恢复页面
-						overviewDiv.style.display = 'grid'; // 显示概览图
+						overviewDiv.style.display = ''; // 显示概览图
 						avatarDiv.innerHTML = ''; // 清空 avatar 区域
 						skillDiv.innerHTML = ''; // 清空技能区域
 						defFaceDiv.innerHTML = ''; // 清空表情区域
