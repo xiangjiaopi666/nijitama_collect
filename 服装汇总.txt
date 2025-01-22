@@ -1,0 +1,16 @@
+s_name_def_body	默认1		Character_def_body
+b_name_def_body	默认-战斗2	Character_b_def_body
+b_name_def_dbody	默认-战损3	Character_b_def_dbody
+s_name_ss_body	春夏服-站立4	Character_ss_body
+b_name_ss_body	春夏服-战斗5	Character_b_ss_body
+b_name_ss_dbody	春夏服-战损6	Character_b_ss_dbody
+s_name_aw_body	秋冬服-站立7	Character_aw_body
+b_name_aw_body	秋冬服-战斗8	Character_b_aw_body
+b_name_aw_dbody	秋冬服-战损9	Character_b_aw_dbody
+s_name_sumo_body	相扑10		Character_sumo
+s_name_bath_body	浴室11		Character_barh
+s_name_ny_body	新年12		Character_ny
+s_name_pa_body	赞助13		Character_patronag
+s_name_swim_body	泳装14		Character_swim
+s_name_xmas_body	圣诞节15		Character_christmas
+s_name_ev_body	情人节16		Character_ev

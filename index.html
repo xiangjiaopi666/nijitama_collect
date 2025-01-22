@@ -1,354 +1,458 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Image Gallery</title>
+		<meta charset="utf-8">
+		<title>nijitama角色收集</title>
 		<style>
-			body {
-				margin: 0;
-				font-family: Arial, sans-serif;
-			}
-
-			#face {
+			#character-overview {
 				display: flex;
 				flex-wrap: wrap;
-				padding: 10px;
+				/* 使子项换行 */
+				gap: 10px;
+				/* 角色之间的间隙 */
+				justify-content: center;
+				/* 水平居中对齐 */
 			}
 
-			.image-container {
+			#character-overview div {
 				width: 128px;
 				height: 128px;
-				margin: 5px;
-				border-radius: 16px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
 				overflow: hidden;
-				transition: transform 0.2s ease, box-shadow 0.2s ease;
+				/* 裁剪掉溢出的部分 */
 			}
 
-			.image-container img {
+			#character-overview img {
 				width: 100%;
 				height: 100%;
 				object-fit: cover;
-				cursor: pointer;
+				/* 保证图片填满容器并裁剪掉溢出部分 */
+				border-radius: 8px;
+				/* 给图片添加圆角 */
+				transition: transform 0.3s ease;
+				/* 为图片的放大效果添加过渡 */
 			}
 
-			.image-container img:hover {
-				transform: scale(1.1);
-				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+			#character-overview div:hover {
+				transform: scale(1.05);
+				/* 鼠标悬停时轻微放大 div */
 			}
 
-			#photo {
-				display: none;
-				padding: 20px;
+			#character-overview img:hover {
+				transform: scale(1.05);
+				/* 鼠标悬停时轻微放大图片 */
 			}
 
-			#photo div {
-				margin-bottom: 20px;
-			}
-
-			/* 头像和技能图样式 */
-			.first-row {
+			#character-avatar {
 				display: flex;
-				flex-direction: column;
+				justify-content: center;
 				align-items: center;
+				margin-top: 20px;
 			}
 
-			.skill-image-container {
-				text-align: center;
+			#character-avatar img {
+				width: 128px;
+				height: 128px;
+				object-fit: cover;
+				border-radius: 8px;
+				cursor: pointer;
+				/* 鼠标悬停时变为可点击 */
 			}
 
-			.avatar-container {
+			#character-skill {
+				display: flex;
+				justify-content: center;
 				margin-top: 10px;
-				text-align: left;
 			}
 
-			/* 桌面版样式 */
-			.skill-image-container img {
-				width: auto;
-				height: auto;
-				max-width: none;
-				max-height: none;
-				object-fit: contain;
+			#character-skill img {
+				display: block;
+				margin: 0 auto;
+				max-width: 100%;
+				/* 确保图片不会超出容器宽度 */
+				max-height: 100%;
+				/* 确保图片不会超出容器高度 */
 			}
 
-			.avatar-container img {
-				max-width: 128px;
-				max-height: 128px;
-				object-fit: contain;
+			#character-def-face {
+				height: 128px;
+				width: 1280px;
+				max-width: 100%;
+				margin-top: 20px;
+				display: flex;
+				justify-self: center;
+				overflow-x: auto;
+				overflow-y: hidden;
+			}
+			
+			/*隐藏表情图界面的滚动条*/
+			#character-def-face::-webkit-scrollbar {
+				display: none;
 			}
 
-			/* 手机版样式 */
-			@media (max-width: 768px) {
-
-				/* 使技能图宽度为手机宽度，保持宽高比 */
-				.skill-image-container img {
-					width: 100%;
-					height: auto;
-				}
-
-				/* 头像容器仍然保持128px */
-				.avatar-container img {
-					max-width: 128px;
-					max-height: 128px;
-					object-fit: contain;
-				}
-
-				/* photo 内容内的黑色区域保持500px大小 */
-				.black-box {
-					width: 100%;
-					height: 500px;
-				}
-
-				/* 居中缩略图容器 */
-				#face {
-					justify-content: center;
-					flex-wrap: wrap;
-				}
-
-				/* 每行至少显示3个缩略图，并保持宽高比 */
-				.image-container {
-					width: calc(33.33% - 10px);
-					margin: 5px;
-					aspect-ratio: 1;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-				}
-
-				/* 确保图片充满容器并保持比例 */
-				.image-container img {
-					width: 100%;
-					height: 100%;
-					object-fit: cover;
-				}
-
-				/* 默认表情图样式 */
-				.def-face-container {
-					display: flex;
-					flex-wrap: wrap;
-					justify-content: space-between;
-					gap: 1px;
-					/* 增加图片间的间隔 */
-				}
-
-				/* 每个表情图至少占屏幕的三分之一 */
-				.def-face-container img {
-					width: calc(33.33% - 20px);
-					/* 每个表情图占屏幕宽度的三分之一 */
-					object-fit: contain;
-					/* 保持原图比例 */
-				}
-
-				/* 默认身体图样式 */
-				.def-body-container img {
-					width: calc(100%);
-					/* 每个表情图占屏幕宽度的三分之一 */
-					object-fit: contain;
-					/* 保持原图比例 */
-				}
+			#character-def-face img {
+				height: 128px;
+				object-fit: cover;
+				border-radius: 8px;
+				margin-right: 20px;
+			}
+			.picture {
+				display: flex;
+				justify-content: center;
+				margin-top: 10px;
+			}
+			.picture img {
+				max-width: 100%;
+				max-height: 100%;
 			}
 		</style>
 	</head>
-	<body>
-		<div id="face"></div>
-		<div id="photo"></div>
+	<script>
+		const names = ["a000", "a001", "a002", "a003", "a004", "a005", "a006", "a007", "a008", "a009", "a010", "a011",
+			"a012", "a015", "a016", "a018", "awt", "bic", "bin", "biz", "bun", "ckg", "ecg", "ecz", "har", "hit", "hiz",
+			"hyu", "iga", "ina", "iwm", "iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not",
+			"oki", "osu", "oum", "owa", "sag", "san", "sim", "sin", "smu", "sur", "taj", "tnb", "tos", "wak", "ymt",
+			"yzm"
+		];
 
-		<script>
-			const names = ["a000", "a001", "a002", "a003", "a004", "a005", "a006", "a007", "a008", "a009", "a010", "a011",
-				"a012", "a015", "a016", "a018", "awt", "bic", "bin", "biz", "bun", "ckg", "ecg", "ecz", "har", "hit", "hiz",
-				"hyu", "iga", "ina", "iwm", "iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not",
-				"oki", "osu", "oum", "owa", "sag", "san", "sim", "sin", "smu", "sur", "taj", "tnb", "tos", "wak", "ymt",
-				"yzm"
-			];
-			//角色缩略图
-			const Character_thumbnail = names.map(name => `overview/f_${name}.png`);
-			//角色技能图
-			const Character_skill = names.map(name => `skill/c_${name}.png`);
-			// 角色表情图
-			const Character_def_face = names.flatMap(name => {
-				// 生成从 00 到 20 的编号
-				return Array.from({
-						length: 21
-					}, (_, number) =>
-					`face/s_${name}_def_face_${String(number).padStart(2, '0')}.png`
-				);
+		//角色概览
+		const Character_overview = names.map(name => `overview/f_${name}.png`);
+		//角色技能图
+		const Character_skill = names.map(name => `skill/c_${name}.png`);
+		//角色表情图
+		const Character_def_face = names.flatMap(name => {
+			return Array.from({
+					length: 21
+				}, (_, number) =>
+				`face/s_${name}_def_face_${String(number).padStart(2, '0')}.png`
+			);
+		});
+		//默认-站立
+		const Character_def_body = names.map(name => `body/s_${name}_def_body.png`);
+		//默认-战斗
+		const Character_b_def_body = names.map(name => `body/b_${name}_def_body.png`);
+		//默认-战损
+		const Character_b_def_dbody = names.map(name => `body/b_${name}_aw_dbody.png`);
+		//春夏服-站立
+		const Character_ss_body = names.map(name => `body/s_${name}_ss_body.png`);
+		//春夏服-战斗
+		const Character_b_ss_body = names.map(name => `body/b_${name}_ss_body.png`);
+		//春夏服-战损
+		const Character_b_ss_dbody = names.map(name => `body/b_${name}_ss_dbody.png`);
+		//秋冬服-站立
+		const Character_aw_body = names.map(name => `body/s_${name}_aw_body.png`);
+		//秋冬服-战斗
+		const Character_b_aw_body = names.map(name => `body/b_${name}_aw_body.png`);
+		//秋冬服-战损
+		const Character_b_aw_dbody = names.map(name => `body/b_${name}_aw_dbody.png`);
+		//相扑
+		const Character_sumo = names.map(name => `body/b_${name}_sumo_body.png`);
+		//浴室
+		const Character_barh = names.map(name => `body/s_${name}_bath_body.png`);
+		//新年
+		const Character_ny = names.map(name => `body/s_${name}_ny_body.png`);
+		//赞助
+		const Character_patronag = names.map(name => `body/s_${name}_pa_body.png`);
+		//泳装
+		const Character_swim = names.map(name => `body/s_${name}_swim_body.png`);
+		//圣诞节
+		const Character_christmas = names.map(name => `body/s_${name}_xmas_body.png`);
+		//情人节
+		const Character_ev = names.map(name => `body/s_${name}_ev_body.png`);
+		// 加载角色概览图
+		function LoadOverview() {
+			// 获取展示角色概览图的父容器
+			const overviewContainer = document.getElementById('character-overview');
+
+			// 遍历 names 数组中的每个角色
+			names.forEach((name, index) => {
+				// 创建新的 div 元素，id 为角色的名字
+				const characterDiv = document.createElement('div');
+				characterDiv.id = name;
+				characterDiv.className = 'chararcter-all';
+
+				// 创建 img 元素，src 为对应角色的概览图路径
+				const characterImage = document.createElement('img');
+				characterImage.src = Character_overview[index];
+
+				// 设置图片加载失败时的处理
+				characterImage.onerror = () => {
+					characterDiv.style.display = 'none'; // 隐藏包含图片的 div
+				};
+
+				// 为图片添加点击事件，触发 select 方法
+				characterImage.onclick = () => select(name);
+
+				// 将图片添加到 div 中
+				characterDiv.appendChild(characterImage);
+
+				// 将创建的 div 添加到容器中
+				overviewContainer.appendChild(characterDiv);
 			});
-			//角色身体图-站姿
-			const Character_def_body = names.map(name => `body/s_${name}_def_body.png`);
-			//角色身体图-战斗
-			const Character_b_def_body = names.map(name => `body/b_${name}_def_body.png`);
-			//角色身体图-战损
-			const Character_def_dbody = names.map(name => `body/s_${name}_def_dbody.png`);
-			// 通过JavaScript动态加载图片
-			function loadImages() {
-				const faceDiv = document.getElementById('face');
-				Character_thumbnail.forEach((image, index) => {
-					const container = document.createElement('div');
-					container.classList.add('image-container');
-					container.id = names[index]; // 设置 div 的 id 为对应的 names 值
+		}
 
-					const imgElement = document.createElement('img');
-					imgElement.src = image;
+		// 当点击图片时，将该图插入到 #character-avatar 中，并插入对应的技能图到 #character-skill
+		// 当点击图片时，将该图插入到 #character-avatar 中，并插入对应的技能图到 #character-skill
+		function select(name) {
+			const avatarContainer = document.getElementById('character-avatar');//全角色概览图
+			const skillContainer = document.getElementById('character-skill');//技能
+			const defFaceContainer = document.getElementById('character-def-face');//表情
+			const defaultbodyContainer = document.getElementById('character-default-body');//默认1
+			const defaultbodyfightContainer = document.getElementById('character-default-body-fight');//默认-战斗2
+			const defaultbodyfightinjuredContainer = document.getElementById('character-default-body-fight-injured');//默认-战损3
+			const character_ss_bodyContainer = document.getElementById('character-ss-body');//春夏服-站立4
+			const character_b_ss_bodyContainer = document.getElementById('character-ss-body-fight');//春夏服-战斗5
+			const character_b_ss_dbodyContainer = document.getElementById('character-ss-body-fight-injured');//春夏服-战损6
+			const character_aw_bodyContainer = document.getElementById('character-aw-body');//秋冬服-站立7
+			const character_b_aw_bodyContainer = document.getElementById('character-aw-body-fight');//秋冬服-战斗8
+			const character_b_aw_dbodyContainer = document.getElementById('character-aw-body-fight-injured');//秋冬服-战损9
+			const character_sumoContainer = document.getElementById('character-sumo');//相扑10
+			const bathContainer = document.getElementById('character-bath');//浴室11
+			const character_nyContainer = document.getElementById('character-ny');//新年12
+			const partronagContainer = document.getElementById('character-patronag');//赞助13
+			const swimContainer = document.getElementById('character-swim');//泳装14
+			const christmasContainer = document.getElementById('character-christmas');//圣诞节15
+			const evContainer = document.getElementById('character-ev');//情人节16
 
-					// 图片加载失败时，隐藏该区域
-					imgElement.onerror = function() {
-						container.style.display = 'none'; // 隐藏图片容器
-					};
+			// 清空 avatar 和 skill 和 def-face 等容器
+			avatarContainer.innerHTML = '';
+			skillContainer.innerHTML = '';
+			defFaceContainer.innerHTML = '';
+			defaultbodyContainer.innerHTML = '';//默认1
+			defaultbodyfightContainer.innerHTML = '';//默认-战斗2
+			defaultbodyfightinjuredContainer.innerHTML = '';//默认-战损3
+			character_ss_bodyContainer.innerHTML = '';//春夏服-站立4
+			character_b_ss_bodyContainer.innerHTML = ''; //春夏服-战斗5
+			character_b_ss_dbodyContainer.innerHTML = ''; //春夏服-战损6
+			character_aw_bodyContainer.innerHTML = ''; //秋冬服-站立7
+			character_b_aw_bodyContainer.innerHTML = ''; //秋冬服-战斗8
+			character_b_aw_dbodyContainer.innerHTML = ''; //秋冬服-战损9
+			character_sumoContainer.innerHTML = '';//相扑10
+			bathContainer.innerHTML = '';//浴室11
+			partronagContainer.innerHTML = '';//赞助13
+			swimContainer.innerHTML = '';//泳装14
+			christmasContainer.innerHTML = '';//圣诞节15
+			evContainer.innerHTML = '';//情人节16
 
-					// 点击图片时的处理
-					imgElement.onclick = function() {
-						showPhoto(container); // 传递包含id的container
-					};
+			// 获取对应的图片路径
+			const characterImageSrc = Character_overview[names.indexOf(name)];
+			const skillImageSrc = Character_skill[names.indexOf(name)];
+			const defaultbodyImageSrc = Character_def_body[names.indexOf(name)];//默认1
+			const defaultbodyfightImageSrc = Character_b_def_body[names.indexOf(name)];//默认-战斗2
+			const defaultbodyfightinjuredImageSrc = Character_b_def_dbody[names.indexOf(name)];//默认-战损3
+			const character_ss_bodyImageSrc = Character_ss_body[names.indexOf(name)];//春夏服-站立4
+			const character_b_ss_bodyImageSrc = Character_b_ss_body[names.indexOf(name)];//春夏服-战斗5
+			const character_b_ss_dbodyImageSrc = Character_b_ss_dbody[names.indexOf(name)];//春夏服-战损6
+			const character_aw_bodyImageSrc = Character_aw_body[names.indexOf(name)];//秋冬服-站立7
+			const character_b_aw_bodyImageSrc = Character_b_aw_body[names.indexOf(name)];//秋冬服-战斗8
+			const character_b_aw_dbodyImageSrc = Character_b_aw_dbody[names.indexOf(name)];//秋冬服-战损9
+			const character_sumoImageSrc = Character_sumo[names.indexOf(name)];//相扑10
+			const bathImageSrc = Character_barh[names.indexOf(name)];//浴室11
+			const character_nyImageSrc = Character_ny[names.indexOf(name)];//新年12
+			const partronagImageSrc = Character_patronag[names.indexOf(name)];//赞助13
+			const swimImageSrc = Character_swim[names.indexOf(name)];//泳装14
+			const christmasImageSrc = Character_christmas[names.indexOf(name)];//圣诞节15
+			const evImageSrc = Character_ev[names.indexOf(name)];//情人节16
+			console.log(defaultbodyImageSrc);
+			// 创建新的 img 元素，设置 src 为点击图片的路径
+			const avatarImage = document.createElement('img');//单个头像
+			avatarImage.src = characterImageSrc;
 
-					container.appendChild(imgElement);
-					faceDiv.appendChild(container);
-
-					// 在头像下面添加默认表情图片
-					addDefaultFaces(container);
-				});
+			const skillImage = document.createElement('img');//技能
+			skillImage.src = skillImageSrc;
+			
+			const defaultbodyImage = document.createElement('img');//默认1
+			defaultbodyImage.src = defaultbodyImageSrc;
+			defaultbodyImage.onerror = function(){
+				defaultbodyImage.src = 'skill/error_skill.png'; // 替换为备用图片的路径
 			}
+			
+			const defaultbodyfightImage = document.createElement('img');//默认-战斗2
+			defaultbodyfightImage.src = defaultbodyfightImageSrc;
+			
+			const defaultbodyfightinjuredImage = document.createElement('img');//默认-战损3
+			defaultbodyfightinjuredImage.src = defaultbodyfightinjuredImageSrc;
+			
+			const character_ss_bodyImage = document.createElement('img');//春夏服-站立4
+			character_ss_bodyImage.src = character_ss_bodyImageSrc;
+			
+			const character_b_ss_bodyImage = document.createElement('img');//春夏服-战斗5
+			character_b_ss_bodyImage.src = character_b_ss_bodyImageSrc;
+			
+			const character_b_ss_dbodyImage = document.createElement('img');//春夏服-战损6
+			character_b_ss_dbodyImage.src = character_b_ss_dbodyImageSrc;
+			
+			const character_aw_bodyImage = document.createElement('img');//秋冬服-站立7
+			character_aw_bodyImage.src = character_aw_bodyImageSrc;
+			
+			const character_b_aw_bodyImage = document.createElement('img');//秋冬服-战斗8
+			character_b_aw_bodyImage.src = character_b_aw_bodyImageSrc;
+			
+			const character_b_aw_dbodyImage = document.createElement('img');//秋冬服-战损9
+			character_b_aw_dbodyImage.src = character_b_aw_dbodyImageSrc;
+			
+			const character_sumoImage = document.createElement('img');//相扑10
+			character_sumoImage.src = character_sumoImageSrc;
+			
+			const bathImage = document.createElement('img');//浴室11
+			bathImage.src = bathImageSrc;
+			
+			const character_nyImage = document.createElement('img');//新年12
+			character_nyImage.src = character_nyImageSrc;
+			
+			const partronagImage = document.createElement('img');//赞助13
+			partronagImage.src = partronagImageSrc;
+			
+			const swimImage = document.createElement('img');//泳装14
+			swimImage.src = swimImageSrc;
+			
+			const christmasImage = document.createElement('img');//圣诞节15
+			christmasImage.src = christmasImageSrc;
+			
+			const evImage = document.createElement('img');//情人节16
+			evImage.src = evImageSrc;
+			
+			// 将图片插入到对应容器
+			avatarContainer.appendChild(avatarImage);
+			skillContainer.appendChild(skillImage);
+			defaultbodyContainer.appendChild(defaultbodyImage);//默认1
+			defaultbodyfightContainer.appendChild(defaultbodyfightImage);//默认-战斗2
+			defaultbodyfightinjuredContainer.appendChild(defaultbodyfightinjuredImage);//默认-战损3
+			character_ss_bodyContainer.appendChild(character_ss_bodyImage);//春夏服-站立4
+			character_b_ss_bodyContainer.appendChild(character_b_ss_bodyImage);//春夏服-战斗5
+			character_b_ss_dbodyContainer.appendChild(character_b_ss_dbodyImage);//春夏服-战损6
+			character_aw_bodyContainer.appendChild(character_aw_bodyImage);//秋冬服-站立7
+			character_b_aw_bodyContainer.appendChild(character_b_aw_bodyImage);//秋冬服-战斗8
+			character_b_aw_dbodyContainer.appendChild(character_b_aw_dbodyImage);//秋冬服-战损9
+			character_sumoContainer.appendChild(character_sumoImage);//相扑10
+			bathContainer.appendChild(bathImage);//浴室11
+			partronagContainer.appendChild(partronagImage);//赞助13
+			swimContainer.appendChild(swimImage);//泳装14
+			christmasContainer.appendChild(christmasImage);//圣诞节15
+			evContainer.appendChild(evImage);//情人节16
+			
+			// 如果技能图加载失败，使用默认的替代图
+			skillImage.onerror = function() {
+				skillImage.src = 'skill/error_skill.png';
+			};
 
-			// 添加角色默认表情图片
-			function addDefaultFaces(container) {
-				const name = container.id; // 获取当前头像的名称
-				const faceContainer = document.createElement('div'); // 创建一个新容器来包裹表情图片
+			// 获取并插入对应的表情图
+			for (let number = 0; number < 21; number++) {
+				const faceDiv = document.createElement('div'); // 创建容器 div
+				const faceImage = document.createElement('img');
+				faceImage.src = Character_def_face[names.indexOf(name) * 21 + number];
 
-				// 获取当前角色的所有默认表情图片
-				const faces = Character_def_face.filter(path => path.includes(name));
-
-				// 为每个默认表情图片创建 img 元素并添加到容器中
-				faces.forEach(face => {
-					const imgElement = document.createElement('img');
-					imgElement.src = face;
-
-					// 保持原图大小
-					imgElement.style.objectFit = 'contain'; // 保证图片按比例显示
-					imgElement.style.margin = '5px'; // 图片之间的间距
-
-					// 图片加载失败时的处理，隐藏该图片
-					imgElement.onerror = function() {
-						imgElement.style.display = 'none'; // 隐藏加载失败的图片
-					};
-
-					faceContainer.appendChild(imgElement);
-				});
-
-				// 将表情图片容器添加到头像容器下面
-				container.appendChild(faceContainer);
-			}
-
-
-			function showPhoto(container) {
-				// 隐藏 #face 窗口
-				document.getElementById('face').style.display = 'none';
-
-				// 获取 photo 容器
-				const facePhoto = document.getElementById('photo');
-				facePhoto.style.display = 'block';
-
-				// 创建第一行 div：头像和技能图分开，不在同一行
-				const firstRowDiv = document.createElement('div');
-				firstRowDiv.classList.add('first-row'); // 使用新的 class 来定义垂直排列
-
-				// 技能图容器
-				const skillImageContainer = document.createElement('div');
-				skillImageContainer.classList.add('skill-image-container');
-				const image_Character_skill = document.createElement('img');
-				const skillImageSrc = Character_skill[names.indexOf(container.id)];
-				image_Character_skill.src = skillImageSrc; // 使用对应的技能图片
-
-				// 设置技能图片原始尺寸
-				image_Character_skill.style.maxWidth = 'none'; // 不限制技能图片的宽度
-				image_Character_skill.style.maxHeight = 'none'; // 不限制技能图片的高度
-				image_Character_skill.style.objectFit = 'contain'; // 保持原始比例
-
-				// 图片加载失败时的处理
-				image_Character_skill.onerror = function() {
-					// 加载 error_skill.png 图片代替
-					image_Character_skill.src = 'skill/error_skill.png';
+				// 如果表情图加载失败，隐藏对应的 div
+				faceImage.onerror = function() {
+					faceDiv.style.display = 'none'; // 隐藏包含表情图的 div
 				};
 
-				// 正常情况下显示技能图片
-				skillImageContainer.appendChild(image_Character_skill);
-
-				// 头像容器
-				const avatarContainer = document.createElement('div');
-				avatarContainer.classList.add('avatar-container');
-				const image_Character_avatar = document.createElement('img');
-				image_Character_avatar.src = container.querySelector('img').src; // 使用点击的头像图片
-
-				// 设置头像图片（保持原始大小）
-				image_Character_avatar.style.maxWidth = '128px'; // 保持最大宽度
-				image_Character_avatar.style.maxHeight = '128px'; // 保持最大高度
-				image_Character_avatar.style.objectFit = 'contain'; // 保持原始比例
-
-				// 将头像图片添加到容器
-				avatarContainer.appendChild(image_Character_avatar);
-				// 将技能图容器和头像容器分别添加到 firstRowDiv 中
-				firstRowDiv.appendChild(skillImageContainer); // 技能图容器
-				firstRowDiv.appendChild(avatarContainer); // 头像容器
-				// 将第一行 div 加入到 photo 中
-				facePhoto.appendChild(firstRowDiv); // 第一行技能图和头像
-				//第二类图：表情图
-				// 在技能图下面添加默认表情容器
-				const defFaceContainer = document.createElement('div');
-				defFaceContainer.classList.add('def-face-container'); // 为容器添加类名
-				// 获取当前角色的所有默认表情图片路径
-				const faces = Character_def_face.filter(path => path.includes(container.id));
-				// 为每个表情图片创建 img 元素并添加到容器中
-				faces.forEach(face => {
-					const imgElement = document.createElement('img');
-					imgElement.src = face;
-					// 保持原图大小
-					imgElement.style.objectFit = 'contain'; // 保证图片按比例显示
-					imgElement.style.margin = '5px'; // 图片之间的间距
-					// 图片加载失败时的处理，隐藏该图片
-					imgElement.onerror = function() {
-						imgElement.style.display = 'none'; // 隐藏加载失败的图片
-					};
-					defFaceContainer.appendChild(imgElement);
-				});
-				facePhoto.appendChild(defFaceContainer);
-				//添加:角色身体图-站姿
-				const defBodyContainer = document.createElement('div');
-				defBodyContainer.classList.add('def-body-container');
-				// 获取当前角色的所有身体图片路径
-				const bodys = Character_def_body.filter(path => path.includes(container.id));
-				bodys.forEach(body => {
-					const imgElement = document.createElement('img');
-					imgElement.src = body;
-
-					// 保持原图大小
-					imgElement.style.objectFit = 'contain'; // 保证图片按比例显示
-					imgElement.style.margin = '5px'; // 图片之间的间距
-
-					// 图片加载失败时的处理，隐藏该图片
-					imgElement.onerror = function() {
-						imgElement.style.display = 'none'; // 隐藏加载失败的图片
-					};
-
-					defBodyContainer.appendChild(imgElement);
-				});
-				// 将默认表情容器添加到 photo 中
-				facePhoto.appendChild(defBodyContainer);
-				// 点击左上角头像恢复初始状态
-				avatarContainer.onclick = function() {
-					resetToDefault();
-				};
+				// 将 faceImage 添加到 faceDiv 中，然后再添加到 defFaceContainer
+				faceDiv.appendChild(faceImage);
+				defFaceContainer.appendChild(faceDiv);
 			}
-			// 恢复初始状态
-			function resetToDefault() {
-				// 隐藏 photo
-				document.getElementById('photo').style.display = 'none';
 
-				// 显示 face
-				document.getElementById('face').style.display = 'flex';
+			// 隐藏角色概览容器
+			document.getElementById('character-overview').style.display = 'none';
 
-				// 清空 photo 内容
-				document.getElementById('photo').innerHTML = '';
+			// 为 avatarImage 添加点击事件，点击时恢复页面初始状态
+			avatarImage.onclick = function() {
+				restorePage();
+			};
+		}
+
+
+		// 恢复页面初始状态
+		function restorePage() {
+			// 清空 avatar 和 skill 容器
+			document.getElementById('character-avatar').innerHTML = '';
+			document.getElementById('character-skill').innerHTML = '';
+			document.getElementById('character-def-face').innerHTML = '';
+			document.getElementById('character-default-body').innerHTML ='';//默认1
+			document.getElementById('character-default-body-fight').innerHTML ='';//默认-战斗2
+			document.getElementById('character-default-body-fight-injured').innerHTML ='';//默认-战损3
+			document.getElementById('character-ss-body').innerHTML ='';//春夏服-站立4
+			document.getElementById('character-ss-body-fight').innerHTML ='';//春夏服-战斗5
+			document.getElementById('character-ss-body-fight-injured').innerHTML ='';//春夏服-战损6
+			document.getElementById('character-aw-body').innerHTML ='';//秋冬服-站立7
+			document.getElementById('character-aw-body-fight').innerHTML ='';//秋冬服-战斗8
+			document.getElementById('character-aw-body-fight-injured').innerHTML ='';//秋冬服-战损9
+			document.getElementById('character-sumo').innerHTML ='';//相扑10
+			document.getElementById('character-bath').innerHTML ='';//浴室11
+			document.getElementById('character-ny').innerHTML ='';//新年12
+			document.getElementById('character-patronag').innerHTML ='';//赞助13
+			document.getElementById('character-swim').innerHTML ='';//泳装14
+			document.getElementById('character-christmas').innerHTML ='';//圣诞节15
+			document.getElementById('character-ev').innerHTML ='';//情人节16
+
+			// 显示角色概览容器
+			document.getElementById('character-overview').style.display = 'flex';
+		}
+
+		// 页面加载完成后调用 LoadOverview 方法
+		//window.onload = LoadOverview;
+	
+		// 确保在页面加载完成后执行代码
+		window.onload = function() {
+			//加载全部角色头像概览图
+			LoadOverview();
+			
+			//让表情图区域鼠标滚轮能控制左右滑动
+			// 获取 character-def-face 容器元素
+			const defFaceContainer = document.getElementById('character-def-face');
+
+			// 如果 defFaceContainer 存在，绑定事件
+			if (defFaceContainer) {
+				// 当鼠标进入 character-def-face 容器时
+				defFaceContainer.addEventListener('mouseenter', function() {
+					// 改变滚动行为，监听水平滚动
+					defFaceContainer.addEventListener('wheel', handleHorizontalScroll);
+				});
+
+				// 当鼠标离开 character-def-face 容器时
+				defFaceContainer.addEventListener('mouseleave', function() {
+					// 恢复垂直滚动行为
+					defFaceContainer.removeEventListener('wheel', handleHorizontalScroll);
+				});
+			} else {
+				console.error('#character-def-face 元素未找到');
 			}
-			// 页面加载时调用loadImages函数
-			window.onload = loadImages;
-		</script>
+
+			// 滚轮事件的处理函数，控制左右滚动
+			function handleHorizontalScroll(event) {
+				// 阻止默认的垂直滚动行为
+				event.preventDefault();
+
+				// 根据滚轮的方向设置水平滚动
+				defFaceContainer.scrollLeft += event.deltaY; // 使用 deltaY 来控制 scrollLeft
+			}
+		};
+	</script>
+
+
+
+	<body>
+		<div id="character-overview"></div>
+		<div id="character-skill"></div>
+		<div id="character-avatar"></div>
+		<div id="character-def-face"></div>
+		<div id="character-default-body" class="picture"></div><!--默认站立1-->
+		<div id="character-default-body-fight" class="picture"></div><!--默认战斗2-->
+		<div id="character-default-body-fight-injured" class="picture"></div><!--默认战损3-->
+		<div id="character-ss-body" class="picture"></div><!--春夏服站立4-->
+		<div id="character-ss-body-fight" class="picture"></div><!--春夏服战斗5-->
+		<div id="character-ss-body-fight-injured" class="picture"></div><!--春夏服战损6-->
+		<div id="character-aw-body" class="picture"></div><!--秋冬站立7-->
+		<div id="character-aw-body-fight" class="picture"></div><!--秋冬服战斗8-->
+		<div id="character-aw-body-fight-injured" class="picture"></div><!--秋冬服战损9-->
+		<div id="character-sumo" class="picture"></div><!--相扑10-->
+		<div id="character-bath" class="picture"></div><!--浴室11-->
+		<div id="character-ny" class="picture"></div><!--新年12-->
+		<div id="character-patronag" class="picture"></div><!--赞助13-->
+		<div id="character-swim" class="picture"></div><!--泳装14-->
+		<div id="character-christmas" class="picture"></div><!--圣诞节15-->
+		<div id="character-ev" class="picture"></div><!--情人节16-->
 	</body>
 </html>
