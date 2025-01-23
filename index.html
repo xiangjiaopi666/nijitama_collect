@@ -164,8 +164,8 @@
 		const Character_b_aw_dbody = names.map(name => `body/b_${name}_aw_dbody.png`);
 		//相扑
 		const Character_sumo = names.map(name => `body/b_${name}_sumo_body.png`);
-		//浴室
-		const Character_barh = names.map(name => `body/s_${name}_bath_body.png`);
+		//洗澡
+		const Character_bath = names.map(name => `body/s_${name}_bath_body.png`);
 		//新年
 		const Character_ny = names.map(name => `body/s_${name}_ny_body.png`);
 		//赞助
@@ -176,6 +176,8 @@
 		const Character_christmas = names.map(name => `body/s_${name}_xmas_body.png`);
 		//情人节
 		const Character_ev = names.map(name => `body/s_${name}_ev_body.png`);
+		//浴室
+		const Character_y_bath = names.map(name => `body/y_${name}_body.png`);
 		// 加载角色概览图
 		function LoadOverview() {
 			// 获取展示角色概览图的父容器
@@ -209,193 +211,201 @@
 		}
 
 		// 当点击图片时，将该图插入到 #character-avatar 中，并插入对应的技能图到 #character-skill
-		// 当点击图片时，将该图插入到 #character-avatar 中，并插入对应的技能图到 #character-skill
 		function select(name) {
-			const avatarContainer = document.getElementById('character-avatar');//全角色概览图
-			const skillContainer = document.getElementById('character-skill');//技能
-			const defFaceContainer = document.getElementById('character-def-face');//表情
-			const defaultbodyContainer = document.getElementById('character-default-body');//默认1
-			const defaultbodyfightContainer = document.getElementById('character-default-body-fight');//默认-战斗2
-			const defaultbodyfightinjuredContainer = document.getElementById('character-default-body-fight-injured');//默认-战损3
-			const character_ss_bodyContainer = document.getElementById('character-ss-body');//春夏服-站立4
-			const character_b_ss_bodyContainer = document.getElementById('character-ss-body-fight');//春夏服-战斗5
-			const character_b_ss_dbodyContainer = document.getElementById('character-ss-body-fight-injured');//春夏服-战损6
-			const character_aw_bodyContainer = document.getElementById('character-aw-body');//秋冬服-站立7
-			const character_b_aw_bodyContainer = document.getElementById('character-aw-body-fight');//秋冬服-战斗8
-			const character_b_aw_dbodyContainer = document.getElementById('character-aw-body-fight-injured');//秋冬服-战损9
-			const character_sumoContainer = document.getElementById('character-sumo');//相扑10
-			const bathContainer = document.getElementById('character-bath');//浴室11
-			const character_nyContainer = document.getElementById('character-ny');//新年12
-			const partronagContainer = document.getElementById('character-patronag');//赞助13
-			const swimContainer = document.getElementById('character-swim');//泳装14
-			const christmasContainer = document.getElementById('character-christmas');//圣诞节15
-			const evContainer = document.getElementById('character-ev');//情人节16
-
 			// 清空 avatar 和 skill 和 def-face 等容器
-			avatarContainer.innerHTML = '';
-			skillContainer.innerHTML = '';
-			defFaceContainer.innerHTML = '';
-			defaultbodyContainer.innerHTML = '';//默认1
-			defaultbodyfightContainer.innerHTML = '';//默认-战斗2
-			defaultbodyfightinjuredContainer.innerHTML = '';//默认-战损3
-			character_ss_bodyContainer.innerHTML = '';//春夏服-站立4
-			character_b_ss_bodyContainer.innerHTML = ''; //春夏服-战斗5
-			character_b_ss_dbodyContainer.innerHTML = ''; //春夏服-战损6
-			character_aw_bodyContainer.innerHTML = ''; //秋冬服-站立7
-			character_b_aw_bodyContainer.innerHTML = ''; //秋冬服-战斗8
-			character_b_aw_dbodyContainer.innerHTML = ''; //秋冬服-战损9
-			character_sumoContainer.innerHTML = '';//相扑10
-			bathContainer.innerHTML = '';//浴室11
-			partronagContainer.innerHTML = '';//赞助13
-			swimContainer.innerHTML = '';//泳装14
-			christmasContainer.innerHTML = '';//圣诞节15
-			evContainer.innerHTML = '';//情人节16
-
 			// 获取对应的图片路径
-			const characterImageSrc = Character_overview[names.indexOf(name)];
-			const skillImageSrc = Character_skill[names.indexOf(name)];
-			const defaultbodyImageSrc = Character_def_body[names.indexOf(name)];//默认1
-			const defaultbodyfightImageSrc = Character_b_def_body[names.indexOf(name)];//默认-战斗2
-			const defaultbodyfightinjuredImageSrc = Character_b_def_dbody[names.indexOf(name)];//默认-战损3
-			const character_ss_bodyImageSrc = Character_ss_body[names.indexOf(name)];//春夏服-站立4
-			const character_b_ss_bodyImageSrc = Character_b_ss_body[names.indexOf(name)];//春夏服-战斗5
-			const character_b_ss_dbodyImageSrc = Character_b_ss_dbody[names.indexOf(name)];//春夏服-战损6
-			const character_aw_bodyImageSrc = Character_aw_body[names.indexOf(name)];//秋冬服-站立7
-			const character_b_aw_bodyImageSrc = Character_b_aw_body[names.indexOf(name)];//秋冬服-战斗8
-			const character_b_aw_dbodyImageSrc = Character_b_aw_dbody[names.indexOf(name)];//秋冬服-战损9
-			const character_sumoImageSrc = Character_sumo[names.indexOf(name)];//相扑10
-			const bathImageSrc = Character_barh[names.indexOf(name)];//浴室11
-			const character_nyImageSrc = Character_ny[names.indexOf(name)];//新年12
-			const partronagImageSrc = Character_patronag[names.indexOf(name)];//赞助13
-			const swimImageSrc = Character_swim[names.indexOf(name)];//泳装14
-			const christmasImageSrc = Character_christmas[names.indexOf(name)];//圣诞节15
-			const evImageSrc = Character_ev[names.indexOf(name)];//情人节16
-			console.log(defaultbodyImageSrc);
 			// 创建新的 img 元素，设置 src 为点击图片的路径
+			// 将图片插入到对应容器
+			const avatarContainer = document.getElementById('character-avatar');//全角色概览图
+			avatarContainer.innerHTML = '';
+			const characterImageSrc = Character_overview[names.indexOf(name)];
 			const avatarImage = document.createElement('img');//单个头像
 			avatarImage.src = characterImageSrc;
-
+			avatarContainer.appendChild(avatarImage);
+			
+			const skillContainer = document.getElementById('character-skill');//技能
+			skillContainer.innerHTML = '';
+			const skillImageSrc = Character_skill[names.indexOf(name)];
 			const skillImage = document.createElement('img');//技能
 			skillImage.src = skillImageSrc;
 			// 如果技能图加载失败，使用默认的替代图
 			skillImage.onerror = function() {
 				skillImage.src = 'error/error_skill.png';
 			};
+			skillContainer.appendChild(skillImage);
 			
+			const defFaceContainer = document.getElementById('character-def-face');//表情
+			defFaceContainer.innerHTML = '';
+			
+			const defaultbodyContainer = document.getElementById('character-default-body');//默认1
+			defaultbodyContainer.innerHTML = '';//默认1
+			const defaultbodyImageSrc = Character_def_body[names.indexOf(name)];//默认1
 			const defaultbodyImage = document.createElement('img');//默认1
 			defaultbodyImage.src = defaultbodyImageSrc;
 			defaultbodyImage.onerror = function(){
 				defaultbodyImage.src = 'error/error_defult_body.png';
 			}
+			defaultbodyContainer.appendChild(defaultbodyImage);//默认1
 			
+			const defaultbodyfightContainer = document.getElementById('character-default-body-fight');//默认-战斗2
+			defaultbodyfightContainer.innerHTML = '';//默认-战斗2
+			const defaultbodyfightImageSrc = Character_b_def_body[names.indexOf(name)];//默认-战斗2
 			const defaultbodyfightImage = document.createElement('img');//默认-战斗2
 			defaultbodyfightImage.src = defaultbodyfightImageSrc;
 			defaultbodyfightImage.onerror = function(){
 				defaultbodyfightImage.src = 'error/error_defult_body_fight.png';
 			}
+			defaultbodyfightContainer.appendChild(defaultbodyfightImage);//默认-战斗2
 			
+			const defaultbodyfightinjuredContainer = document.getElementById('character-default-body-fight-injured');//默认-战损3
+			defaultbodyfightinjuredContainer.innerHTML = '';//默认-战损3
+			const defaultbodyfightinjuredImageSrc = Character_b_def_dbody[names.indexOf(name)];//默认-战损3
 			const defaultbodyfightinjuredImage = document.createElement('img');//默认-战损3
 			defaultbodyfightinjuredImage.src = defaultbodyfightinjuredImageSrc;
 			defaultbodyfightinjuredImage.onerror = function(){
 				defaultbodyfightinjuredImage.src = 'error/error_defult_body_fight_injured.png';
 			}
+			defaultbodyfightinjuredContainer.appendChild(defaultbodyfightinjuredImage);//默认-战损3
 			
+			const character_ss_bodyContainer = document.getElementById('character-ss-body');//春夏服-站立4
+			character_ss_bodyContainer.innerHTML = '';//春夏服-站立4
+			const character_ss_bodyImageSrc = Character_ss_body[names.indexOf(name)];//春夏服-站立4
 			const character_ss_bodyImage = document.createElement('img');//春夏服-站立4
 			character_ss_bodyImage.src = character_ss_bodyImageSrc;
 			character_ss_bodyImage.onerror = function(){
 				character_ss_bodyImage.src = 'error/error_ss_body.png';
 			}
+			character_ss_bodyContainer.appendChild(character_ss_bodyImage);//春夏服-站立4
 			
+			const character_b_ss_bodyContainer = document.getElementById('character-ss-body-fight');//春夏服-战斗5
+			character_b_ss_bodyContainer.innerHTML = ''; //春夏服-战斗5
+			const character_b_ss_bodyImageSrc = Character_b_ss_body[names.indexOf(name)];//春夏服-战斗5
 			const character_b_ss_bodyImage = document.createElement('img');//春夏服-战斗5
 			character_b_ss_bodyImage.src = character_b_ss_bodyImageSrc;
 			character_b_ss_bodyImage.onerror = function(){
 				character_b_ss_bodyImage.src = 'error/error_ss_body_fight.png';
 			}
+			character_b_ss_bodyContainer.appendChild(character_b_ss_bodyImage);//春夏服-战斗5
 			
+			const character_b_ss_dbodyContainer = document.getElementById('character-ss-body-fight-injured');//春夏服-战损6
+			character_b_ss_dbodyContainer.innerHTML = ''; //春夏服-战损6
+			const character_b_ss_dbodyImageSrc = Character_b_ss_dbody[names.indexOf(name)];//春夏服-战损6
 			const character_b_ss_dbodyImage = document.createElement('img');//春夏服-战损6
 			character_b_ss_dbodyImage.src = character_b_ss_dbodyImageSrc;
 			character_b_ss_dbodyImage.onerror = function(){
 				character_b_ss_dbodyImage.src = 'error/error_ss_body_fight_injured.png';
 			}
+			character_b_ss_dbodyContainer.appendChild(character_b_ss_dbodyImage);//春夏服-战损6
 			
+			const character_aw_bodyContainer = document.getElementById('character-aw-body');//秋冬服-站立7
+			character_aw_bodyContainer.innerHTML = ''; //秋冬服-站立7
+			const character_aw_bodyImageSrc = Character_aw_body[names.indexOf(name)];//秋冬服-站立7
 			const character_aw_bodyImage = document.createElement('img');//秋冬服-站立7
 			character_aw_bodyImage.src = character_aw_bodyImageSrc;
 			character_aw_bodyImage.onerror = function(){
 				character_aw_bodyImage.src = 'error/error_aw_body.png';
 			}
+			character_aw_bodyContainer.appendChild(character_aw_bodyImage);//秋冬服-站立7
 			
+			const character_b_aw_bodyContainer = document.getElementById('character-aw-body-fight');//秋冬服-战斗8
+			character_b_aw_bodyContainer.innerHTML = ''; //秋冬服-战斗8
+			const character_b_aw_bodyImageSrc = Character_b_aw_body[names.indexOf(name)];//秋冬服-战斗8
 			const character_b_aw_bodyImage = document.createElement('img');//秋冬服-战斗8
 			character_b_aw_bodyImage.src = character_b_aw_bodyImageSrc;
 			character_b_aw_bodyImage.onerror = function(){
 				character_b_aw_bodyImage.src = 'error/error_aw_body_fight.png';
 			}
+			character_b_aw_bodyContainer.appendChild(character_b_aw_bodyImage);//秋冬服-战斗8
 			
+			const character_b_aw_dbodyContainer = document.getElementById('character-aw-body-fight-injured');//秋冬服-战损9
+			character_b_aw_dbodyContainer.innerHTML = ''; //秋冬服-战损9
+			const character_b_aw_dbodyImageSrc = Character_b_aw_dbody[names.indexOf(name)];//秋冬服-战损9
 			const character_b_aw_dbodyImage = document.createElement('img');//秋冬服-战损9
 			character_b_aw_dbodyImage.src = character_b_aw_dbodyImageSrc;
 			character_b_aw_dbodyImage.onerror = function(){
 				character_b_aw_dbodyImage.src = 'error/error_aw_body_fight_injured.png';
 			}
+			character_b_aw_dbodyContainer.appendChild(character_b_aw_dbodyImage);//秋冬服-战损9
 			
+			const character_sumoContainer = document.getElementById('character-sumo');//相扑10
+			character_sumoContainer.innerHTML = '';//相扑10
+			const character_sumoImageSrc = Character_sumo[names.indexOf(name)];//相扑10
 			const character_sumoImage = document.createElement('img');//相扑10
 			character_sumoImage.src = character_sumoImageSrc;
 			character_sumoImage.onerror = function(){
 				character_sumoImage.src = 'error/error_sumo.png';
 			}
+			character_sumoContainer.appendChild(character_sumoImage);//相扑10
 			
-			const bathImage = document.createElement('img');//浴室11
+			const bathContainer = document.getElementById('character-bath');//洗澡11
+			bathContainer.innerHTML = '';//洗澡11
+			const bathImageSrc = Character_bath[names.indexOf(name)];//洗澡11
+			const bathImage = document.createElement('img');//洗澡11
 			bathImage.src = bathImageSrc;
 			bathImage.onerror = function(){
 				bathImage.src = 'error/error_bath.png';
 			}
+			bathContainer.appendChild(bathImage);//洗澡11
 			
+			const character_nyContainer = document.getElementById('character-ny');//新年12
+			character_nyContainer.innerHTML = '';//新年12
+			const character_nyImageSrc = Character_ny[names.indexOf(name)];//新年12
 			const character_nyImage = document.createElement('img');//新年12
 			character_nyImage.src = character_nyImageSrc;
 			character_nyImage.onerror = function(){
 				character_nyImage.src = 'error/error_ny.png';
 			}
+			character_nyContainer.appendChild(character_nyImage);//新年12
 			
+			const partronagContainer = document.getElementById('character-patronag');//赞助13
+			partronagContainer.innerHTML = '';//赞助13
+			const partronagImageSrc = Character_patronag[names.indexOf(name)];//赞助13
 			const partronagImage = document.createElement('img');//赞助13
 			partronagImage.src = partronagImageSrc;
 			partronagImage.onerror = function(){
 				partronagImage.src = 'error/error_pa.png';
 			}
+			partronagContainer.appendChild(partronagImage);//赞助13
 			
+			const swimContainer = document.getElementById('character-swim');//泳装14
+			swimContainer.innerHTML = '';//泳装14
+			const swimImageSrc = Character_swim[names.indexOf(name)];//泳装14
 			const swimImage = document.createElement('img');//泳装14
 			swimImage.src = swimImageSrc;
 			swimImage.onerror = function(){
 				swimImage.src = 'error/error_swim.png';
 			}
+			swimContainer.appendChild(swimImage);//泳装14
 			
+			const christmasContainer = document.getElementById('character-christmas');//圣诞节15
+			christmasContainer.innerHTML = '';//圣诞节15
+			const christmasImageSrc = Character_christmas[names.indexOf(name)];//圣诞节15
 			const christmasImage = document.createElement('img');//圣诞节15
 			christmasImage.src = christmasImageSrc;
 			christmasImage.onerror = function(){
 				christmasImage.src = 'error/error_xmas.png';
 			}
+			christmasContainer.appendChild(christmasImage);//圣诞节15
 			
+			const evContainer = document.getElementById('character-ev');//情人节16
+			evContainer.innerHTML = '';//情人节16
+			const evImageSrc = Character_ev[names.indexOf(name)];//情人节16
 			const evImage = document.createElement('img');//情人节16
 			evImage.src = evImageSrc;
 			evImage.onerror = function(){
 				evImage.src = 'error/error_ev.png';
 			}
-			
-			// 将图片插入到对应容器
-			avatarContainer.appendChild(avatarImage);
-			skillContainer.appendChild(skillImage);
-			defaultbodyContainer.appendChild(defaultbodyImage);//默认1
-			defaultbodyfightContainer.appendChild(defaultbodyfightImage);//默认-战斗2
-			defaultbodyfightinjuredContainer.appendChild(defaultbodyfightinjuredImage);//默认-战损3
-			character_ss_bodyContainer.appendChild(character_ss_bodyImage);//春夏服-站立4
-			character_b_ss_bodyContainer.appendChild(character_b_ss_bodyImage);//春夏服-战斗5
-			character_b_ss_dbodyContainer.appendChild(character_b_ss_dbodyImage);//春夏服-战损6
-			character_aw_bodyContainer.appendChild(character_aw_bodyImage);//秋冬服-站立7
-			character_b_aw_bodyContainer.appendChild(character_b_aw_bodyImage);//秋冬服-战斗8
-			character_b_aw_dbodyContainer.appendChild(character_b_aw_dbodyImage);//秋冬服-战损9
-			character_sumoContainer.appendChild(character_sumoImage);//相扑10
-			bathContainer.appendChild(bathImage);//浴室11
-			partronagContainer.appendChild(partronagImage);//赞助13
-			swimContainer.appendChild(swimImage);//泳装14
-			christmasContainer.appendChild(christmasImage);//圣诞节15
 			evContainer.appendChild(evImage);//情人节16
+			
+			const character_y_bathContainer = document.getElementById('character-y-bath');//浴室17
+			character_y_bathContainer.innerHTML = '';//浴室17
+			const character_y_bathImageSrc = Character_y_bath[names.indexOf(name)];//浴室17
+			const character_y_bathImage = document.createElement('img');//浴室17
+			character_y_bathImage.src = character_y_bathImageSrc;
+			character_y_bathImage.onerror = function(){
+				character_y_bathImage.src = 'error/error_y_body.png';
+			}
+			character_y_bathContainer.appendChild(character_y_bathImage);//浴室17
 			
 			// 创建用于覆盖的 back.png 图片
 			const backImage = document.createElement('img');
@@ -452,12 +462,13 @@
 			document.getElementById('character-aw-body-fight').innerHTML ='';//秋冬服-战斗8
 			document.getElementById('character-aw-body-fight-injured').innerHTML ='';//秋冬服-战损9
 			document.getElementById('character-sumo').innerHTML ='';//相扑10
-			document.getElementById('character-bath').innerHTML ='';//浴室11
+			document.getElementById('character-bath').innerHTML ='';//洗澡11
 			document.getElementById('character-ny').innerHTML ='';//新年12
 			document.getElementById('character-patronag').innerHTML ='';//赞助13
 			document.getElementById('character-swim').innerHTML ='';//泳装14
 			document.getElementById('character-christmas').innerHTML ='';//圣诞节15
 			document.getElementById('character-ev').innerHTML ='';//情人节16
+			document.getElementById('character-y-bath').innerHTML ='';//浴室17
 
 			// 显示角色概览容器
 			document.getElementById('character-overview').style.display = 'flex';
@@ -506,25 +517,47 @@
 
 
 	<body>
+		<!--全角色概览-->
 		<div id="character-overview"></div>
+		<!--技能-->
 		<div id="character-skill"></div>
+		<!--头像-->
 		<div id="character-avatar"></div>
+		<!--所有表情-->
 		<div id="character-def-face"></div>
-		<div id="character-default-body" class="picture"></div><!--默认站立1-->
-		<div id="character-default-body-fight" class="picture"></div><!--默认战斗2-->
-		<div id="character-default-body-fight-injured" class="picture"></div><!--默认战损3-->
-		<div id="character-ss-body" class="picture"></div><!--春夏服站立4-->
-		<div id="character-ss-body-fight" class="picture"></div><!--春夏服战斗5-->
-		<div id="character-ss-body-fight-injured" class="picture"></div><!--春夏服战损6-->
-		<div id="character-aw-body" class="picture"></div><!--秋冬站立7-->
-		<div id="character-aw-body-fight" class="picture"></div><!--秋冬服战斗8-->
-		<div id="character-aw-body-fight-injured" class="picture"></div><!--秋冬服战损9-->
-		<div id="character-sumo" class="picture"></div><!--相扑10-->
-		<div id="character-bath" class="picture"></div><!--浴室11-->
-		<div id="character-ny" class="picture"></div><!--新年12-->
-		<div id="character-patronag" class="picture"></div><!--赞助13-->
-		<div id="character-swim" class="picture"></div><!--泳装14-->
-		<div id="character-christmas" class="picture"></div><!--圣诞节15-->
-		<div id="character-ev" class="picture"></div><!--情人节16-->
+		<!--默认站立1-->
+		<div id="character-default-body" class="picture"></div>
+		<!--默认战斗2-->
+		<div id="character-default-body-fight" class="picture"></div>
+		<!--默认战损3-->
+		<div id="character-default-body-fight-injured" class="picture"></div>
+		<!--春夏服站立4-->
+		<div id="character-ss-body" class="picture"></div>
+		<!--春夏服战斗5-->
+		<div id="character-ss-body-fight" class="picture"></div>
+		<!--春夏服战损6-->
+		<div id="character-ss-body-fight-injured" class="picture"></div>
+		<!--秋冬站立7-->
+		<div id="character-aw-body" class="picture"></div>
+		<!--秋冬服战斗8-->
+		<div id="character-aw-body-fight" class="picture"></div>
+		<!--秋冬服战损9-->
+		<div id="character-aw-body-fight-injured" class="picture"></div>
+		<!--相扑10-->
+		<div id="character-sumo" class="picture"></div>
+		<!--洗澡11-->
+		<div id="character-bath" class="picture"></div>
+		<!--新年12-->
+		<div id="character-ny" class="picture"></div>
+		<!--赞助13-->
+		<div id="character-patronag" class="picture"></div>
+		<!--泳装14-->
+		<div id="character-swim" class="picture"></div>
+		<!--圣诞节15-->
+		<div id="character-christmas" class="picture"></div>
+		<!--情人节16-->
+		<div id="character-ev" class="picture"></div>
+		<!--浴室17-->
+		<div id="character-y-bath" class="picture"></div>
 	</body>
 </html>

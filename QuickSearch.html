@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download Images as ZIP</title>
+  <style>
+    #image-container img {
+      margin: 10px;
+      display: block;
+    }
+    #image-container .remark {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 15px;
+    }
+    #download-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    #download-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>选择一个名称生成图片</h1>
+  <!-- 下拉列表 -->
+  <select id="name-selector">
+    <option value="">请选择名称</option>
+  </select>
+
+  <!-- 显示生成的图片 -->
+  <div id="image-container"></div>
+
+  <!-- 下载按钮 -->
+  <button id="download-btn">打包下载图片</button>
+
+  <!-- 引入 JSZip 和 FileSaver.js 库 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+  <script>
+    const names = [
+        	  { value: "awt", remark: "√" },
+        	  { value: "bic", remark: "√" },
+        	  { value: "bin", remark: "√" },
+        	  { value: "biz", remark: "√" },
+        	  { value: "bun", remark: "√" },
+        	  { value: "ckg", remark: "√" },
+        	  { value: "ecg", remark: "√" },
+        	  { value: "ecz", remark: "√" },
+        	  { value: "har", remark: "√" },
+        	  { value: "hit", remark: "√" },
+        	  { value: "hiz", remark: "√" },
+        	  { value: "hyu", remark: "√" },
+        	  { value: "iga", remark: "√" },
+        	  { value: "ina", remark: "√" },
+        	  { value: "iwm", remark: "√" },
+        	  { value: "iyo", remark: "√" },
+        	  { value: "izu", remark: "√" },
+        	  { value: "kag", remark: "√" },
+        	  { value: "kai", remark: "√" },
+        	  { value: "kaw", remark: "√" },
+        	  { value: "kaz", remark: "√" },
+        	  { value: "kii", remark: "√" },
+        	  { value: "mik", remark: "√" },
+        	  { value: "mus", remark: "√" },
+        	  { value: "nag", remark: "√" },
+        	  { value: "not", remark: "√" },
+        	  { value: "oki", remark: "√" },
+        	  { value: "osu", remark: "√" },
+        	  { value: "oum", remark: "√" },
+        	  { value: "owa", remark: "√" },
+        	  { value: "sag", remark: "√" },
+        	  { value: "san", remark: "√" },
+        	  { value: "sim", remark: "√" },
+        	  { value: "sin", remark: "√" },
+        	  { value: "smu", remark: "√" },
+        	  { value: "sur", remark: "√" },
+        	  { value: "taj", remark: "√" },
+        	  { value: "tnb", remark: "√" },
+        	  { value: "tos", remark: "√" },
+        	  { value: "wak", remark: "√" },
+        	  { value: "ymt", remark: "√" },
+        	  { value: "yzm", remark: "√" },
+        	  { value: "a000", remark: "√" },
+        	  { value: "a001", remark: "√" },
+        	  { value: "a002", remark: "√" },
+        	  { value: "a003", remark: "√" },
+        	  { value: "a004", remark: "不存在" },
+        	  { value: "a005", remark: "√" },
+        	  { value: "a006", remark: "√" },
+        	  { value: "a007", remark: "√" },
+        	  { value: "a008", remark: "" },
+        	  { value: "a009", remark: "" },
+        	  { value: "a010", remark: "" },
+        	  { value: "a011", remark: "√" },
+        	  { value: "a012", remark: "√" },
+        	  { value: "a013", remark: "" },
+        	  { value: "a014", remark: "" },
+        	  { value: "a015", remark: "√" },
+        	  { value: "a016", remark: "√" },
+        	  { value: "a017", remark: "" },
+        	  { value: "a018", remark: "√" },
+        	  { value: "a019", remark: "" },
+        	  { value: "n001", remark: "√" },
+        	  { value: "n002", remark: "√" },
+        	  { value: "n003", remark: "√" },
+        	  { value: "n004", remark: "√" },
+        	  { value: "n005", remark: "√" },
+        	  { value: "n006", remark: "√" },
+        	  { value: "n007", remark: "" },
+        	  { value: "n008", remark: "" },
+        	  { value: "n009", remark: "" },
+        	  { value: "n010", remark: "" },
+        	  { value: "n011", remark: "" },
+        	  { value: "n012", remark: "" },
+        	  { value: "n013", remark: "" },
+        	  { value: "n014", remark: "" },
+        	  { value: "n015", remark: "" },
+        	  { value: "n016", remark: "" },
+        	  { value: "n017", remark: "" },
+        	  { value: "n018", remark: "" },
+        	  { value: "n019", remark: "" },
+        	  { value: "s000", remark: "" },
+        	  { value: "s001", remark: "" },
+        	  { value: "s002", remark: "" },
+        	  { value: "s003", remark: "√" },
+        	  { value: "s004", remark: "" },
+        	  { value: "s005", remark: "" },
+        	  { value: "s006", remark: "" },
+        	  { value: "s007", remark: "" },
+        	  { value: "s008", remark: "" },
+        	  { value: "s009", remark: "" },
+        	  { value: "s010", remark: "" },
+        	  { value: "s011", remark: "√" },
+        	  { value: "s012", remark: "" },
+        	  { value: "s013", remark: "" },
+        	  { value: "s014", remark: "" },
+        	  { value: "s015", remark: "" },
+        	  { value: "s016", remark: "" },
+        	  { value: "s017", remark: "" },
+        	  { value: "s018", remark: "" },
+        	  { value: "s019", remark: "" }
+            ]; // 名称和备注信息
+            const baseImageSrcs = [
+              { src: 'https://tukitama.com/tamacolle/resources/f_$(name).png', remark: '头像' },
+              { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_00.png', remark: '表情01' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_01.png', remark: '表情02' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_02.png', remark: '表情03' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_03.png', remark: '表情04' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_04.png', remark: '表情05' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_05.png', remark: '表情06' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_06.png', remark: '表情07' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_07.png', remark: '表情08' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_08.png', remark: '表情09' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_09.png', remark: '表情10' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_10.png', remark: '表情11' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_11.png', remark: '表情12' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_12.png', remark: '表情13' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_13.png', remark: '表情14' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_14.png', remark: '表情15' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_15.png', remark: '表情16' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_16.png', remark: '表情17' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_17.png', remark: '表情18' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_18.png', remark: '表情19' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_face_19.png', remark: '表情20' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_def_body.png', remark: '默认-站立' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/b_$(name)_def_body.png', remark: '默认-战斗' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/b_$(name)_def_dbody.png', remark: '默认-战损' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_ss_body.png', remark: '春夏服-站立' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/b_$(name)_ss_body.png', remark: '春夏服-战斗' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/b_$(name)_ss_dbody.png', remark: '春夏服-战损' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_aw_body.png', remark: '秋冬服-站立' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/b_$(name)_aw_body.png', remark: '秋冬服-战斗' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/b_$(name)_aw_dbody.png', remark: '秋冬服-战损' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_sumo_body.png', remark: '相扑' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_bath_body.png', remark: '浴室' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_ny_body.png', remark: '新年' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_pa_body.png', remark: '赞助' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_swim_body.png', remark: '泳装' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_xmas_body.png', remark: '圣诞节' },
+        	  { src: 'https://tukitama.com/tamacolle/resources/s_$(name)_ev_body.png', remark: '情人节' },
+        	  
+            ]; // 图片路径模板和备注信息
+
+    const nameSelector = document.getElementById('name-selector');
+    const imageContainer = document.getElementById('image-container');
+    const downloadBtn = document.getElementById('download-btn');
+
+    // 初始化下拉列表
+    names.forEach(name => {
+      const option = document.createElement('option');
+      option.value = name.value; // 设置实际值
+      option.textContent = name.remark; // 显示备注
+      nameSelector.appendChild(option);
+    });
+
+    // 监听下拉列表的选择事件
+    nameSelector.addEventListener('change', () => {
+      const selectedValue = nameSelector.value;
+
+      // 清空之前生成的图片
+      imageContainer.innerHTML = '';
+
+      if (selectedValue) {
+        // 遍历 baseImageSrcs，生成图片路径并创建 <img>
+        baseImageSrcs.forEach(baseImage => {
+          const imageSrc = baseImage.src.replace('$(name)', selectedValue);
+
+          // 创建图片
+          const imgElement = document.createElement('img');
+          imgElement.src = imageSrc;
+          imgElement.alt = `${selectedValue} image`;
+
+          // 创建备注
+          const remarkElement = document.createElement('div');
+          remarkElement.className = 'remark';
+          remarkElement.textContent = baseImage.remark;
+
+          // 将图片和备注一起添加到容器中
+          imageContainer.appendChild(imgElement);
+          imageContainer.appendChild(remarkElement);
+        });
+      }
+    });
+
+    // 打包已加载的图片为 ZIP 文件并下载
+    async function downloadImagesAsZip() {
+      const images = document.querySelectorAll('#image-container img'); // 获取所有图片
+      const selectedName = nameSelector.value; // 获取选中的名称值
+
+      if (!selectedName) {
+        alert('请先选择一个名称！');
+        return;
+      }
+
+      const zip = new JSZip(); // 创建一个新的 ZIP 实例
+      const folder = zip.folder(selectedName); // 使用选中的名称创建文件夹
+
+      // 遍历所有图片并添加到 ZIP 文件中
+      for (const img of images) {
+        if (img.complete && img.naturalWidth > 0) { // 检查图片是否加载完成
+          const response = await fetch(img.src); // 下载图片数据
+          const blob = await response.blob(); // 转为 Blob 格式
+          const fileName = img.src.split('/').pop(); // 获取图片文件名
+          folder.file(fileName, blob); // 将图片添加到 ZIP 文件夹中
+        }
+      }
+
+      // 生成 ZIP 文件并触发下载，文件名使用选中的名称
+      const content = await zip.generateAsync({ type: 'blob' });
+      saveAs(content, `${selectedName}.zip`); // 使用选中的名称作为 ZIP 文件名
+    }
+
+    // 绑定下载按钮的点击事件
+    downloadBtn.addEventListener('click', downloadImagesAsZip);
+  </script>
+</body>
+</html>
