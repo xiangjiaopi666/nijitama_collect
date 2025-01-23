@@ -2,7 +2,6 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>nijitama角色收集</title>
 		<style>
 			#character-overview {
@@ -51,9 +50,13 @@
 				justify-content: center;
 				align-items: center;
 				margin-top: 20px;
+				position: relative;
+				height: 128px;
 			}
 
 			#character-avatar img {
+				position: absolute;
+				transition: opacity 0.3s ease;
 				width: 128px;
 				height: 128px;
 				object-fit: cover;
@@ -61,7 +64,17 @@
 				cursor: pointer;
 				/* 鼠标悬停时变为可点击 */
 			}
-
+			
+			#character-avatar img.back-overlay {
+			    z-index: 1;
+			    opacity: 0; /* 初始状态透明 */
+			}
+			
+			#character-avatar:hover img.back-overlay {
+			    opacity: 1; /* 悬停时显示 */
+				pointer-events: none; /* 允许事件穿透到下层 */
+			}
+			
 			#character-skill {
 				display: flex;
 				justify-content: center;
@@ -108,19 +121,7 @@
 				max-width: 100%;
 				max-height: 100%;
 			}
-			/* 手机版样式 */
-			@media (max-width: 768px) {
-						
-				/* 每行至少显示3个缩略图，并保持宽高比 */
-				.character-overview {
-					width: calc(33.33% - 10px);
-					margin: 5px;
-					aspect-ratio: 1;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-				}
-			}
+			
 		</style>
 	</head>
 	<script>
@@ -396,7 +397,18 @@
 			christmasContainer.appendChild(christmasImage);//圣诞节15
 			evContainer.appendChild(evImage);//情人节16
 			
+			// 创建用于覆盖的 back.png 图片
+			const backImage = document.createElement('img');
+			backImage.src = 'error/back.png';
+			backImage.className = 'back-overlay';
+			backImage.onerror = function () {
+			    backImage.style.display = 'none'; // 如果 back.png 加载失败，隐藏它
+			};
 			
+			// 将覆盖图片和头像图片一起插入到 avatar 容器
+			avatarContainer.appendChild(avatarImage);
+			avatarContainer.appendChild(backImage);
+
 
 			// 获取并插入对应的表情图
 			for (let number = 0; number < 21; number++) {
