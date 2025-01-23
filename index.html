@@ -262,57 +262,106 @@
 
 			const skillImage = document.createElement('img');//技能
 			skillImage.src = skillImageSrc;
+			// 如果技能图加载失败，使用默认的替代图
+			skillImage.onerror = function() {
+				skillImage.src = 'error/error_skill.png';
+			};
 			
 			const defaultbodyImage = document.createElement('img');//默认1
 			defaultbodyImage.src = defaultbodyImageSrc;
 			defaultbodyImage.onerror = function(){
-				defaultbodyImage.src = 'skill/error_skill.png'; // 替换为备用图片的路径
+				defaultbodyImage.src = 'error/error_defult_body.png';
 			}
 			
 			const defaultbodyfightImage = document.createElement('img');//默认-战斗2
 			defaultbodyfightImage.src = defaultbodyfightImageSrc;
+			defaultbodyfightImage.onerror = function(){
+				defaultbodyfightImage.src = 'error/error_defult_body_fight.png';
+			}
 			
 			const defaultbodyfightinjuredImage = document.createElement('img');//默认-战损3
 			defaultbodyfightinjuredImage.src = defaultbodyfightinjuredImageSrc;
+			defaultbodyfightinjuredImage.onerror = function(){
+				defaultbodyfightinjuredImage.src = 'error/error_defult_body_fight_injured.png';
+			}
 			
 			const character_ss_bodyImage = document.createElement('img');//春夏服-站立4
 			character_ss_bodyImage.src = character_ss_bodyImageSrc;
+			character_ss_bodyImage.onerror = function(){
+				character_ss_bodyImage.src = 'error/error_ss_body.png';
+			}
 			
 			const character_b_ss_bodyImage = document.createElement('img');//春夏服-战斗5
 			character_b_ss_bodyImage.src = character_b_ss_bodyImageSrc;
+			character_b_ss_bodyImage.onerror = function(){
+				character_b_ss_bodyImage.src = 'error/error_ss_body_fight.png';
+			}
 			
 			const character_b_ss_dbodyImage = document.createElement('img');//春夏服-战损6
 			character_b_ss_dbodyImage.src = character_b_ss_dbodyImageSrc;
+			character_b_ss_dbodyImage.onerror = function(){
+				character_b_ss_dbodyImage.src = 'error/error_ss_body_fight_injured.png';
+			}
 			
 			const character_aw_bodyImage = document.createElement('img');//秋冬服-站立7
 			character_aw_bodyImage.src = character_aw_bodyImageSrc;
+			character_aw_bodyImage.onerror = function(){
+				character_aw_bodyImage.src = 'error/error_aw_body.png';
+			}
 			
 			const character_b_aw_bodyImage = document.createElement('img');//秋冬服-战斗8
 			character_b_aw_bodyImage.src = character_b_aw_bodyImageSrc;
+			character_b_aw_bodyImage.onerror = function(){
+				character_b_aw_bodyImage.src = 'error/error_aw_body_fight.png';
+			}
 			
 			const character_b_aw_dbodyImage = document.createElement('img');//秋冬服-战损9
 			character_b_aw_dbodyImage.src = character_b_aw_dbodyImageSrc;
+			character_b_aw_dbodyImage.onerror = function(){
+				character_b_aw_dbodyImage.src = 'error/error_aw_body_fight_injured.png';
+			}
 			
 			const character_sumoImage = document.createElement('img');//相扑10
 			character_sumoImage.src = character_sumoImageSrc;
+			character_sumoImage.onerror = function(){
+				character_sumoImage.src = 'error/error_sumo.png';
+			}
 			
 			const bathImage = document.createElement('img');//浴室11
 			bathImage.src = bathImageSrc;
+			bathImage.onerror = function(){
+				bathImage.src = 'error/error_bath.png';
+			}
 			
 			const character_nyImage = document.createElement('img');//新年12
 			character_nyImage.src = character_nyImageSrc;
+			character_nyImage.onerror = function(){
+				character_nyImage.src = 'error/error_ny.png';
+			}
 			
 			const partronagImage = document.createElement('img');//赞助13
 			partronagImage.src = partronagImageSrc;
+			partronagImage.onerror = function(){
+				partronagImage.src = 'error/error_pa.png';
+			}
 			
 			const swimImage = document.createElement('img');//泳装14
 			swimImage.src = swimImageSrc;
+			swimImage.onerror = function(){
+				swimImage.src = 'error/error_swim.png';
+			}
 			
 			const christmasImage = document.createElement('img');//圣诞节15
 			christmasImage.src = christmasImageSrc;
+			christmasImage.onerror = function(){
+				christmasImage.src = 'error/error_xmas.png';
+			}
 			
 			const evImage = document.createElement('img');//情人节16
 			evImage.src = evImageSrc;
+			evImage.onerror = function(){
+				evImage.src = 'error/error_ev.png';
+			}
 			
 			// 将图片插入到对应容器
 			avatarContainer.appendChild(avatarImage);
@@ -333,10 +382,7 @@
 			christmasContainer.appendChild(christmasImage);//圣诞节15
 			evContainer.appendChild(evImage);//情人节16
 			
-			// 如果技能图加载失败，使用默认的替代图
-			skillImage.onerror = function() {
-				skillImage.src = 'skill/error_skill.png';
-			};
+			
 
 			// 获取并插入对应的表情图
 			for (let number = 0; number < 21; number++) {
