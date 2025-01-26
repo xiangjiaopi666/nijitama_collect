@@ -5,7 +5,10 @@
 		<title>nijitama角色收集</title>
 		<style>
 			#character-overview,
-			#character-overview-npc {
+			#character-overview-npc,
+			#character-overview-a,
+			#character-overview-s,
+			#view-all {
 				display: flex;
 				flex-wrap: wrap;
 				/* 使子项换行 */
@@ -16,7 +19,10 @@
 			}
 
 			#nijitama-character,
-			#nijitama-npc {
+			#nijitama-npc,
+			#nijitama-a,
+			#nijitama-s,
+			#nijitama-view {
 				display: flex;
 				padding-top: 10px;
 				padding-bottom: 10px;
@@ -25,7 +31,9 @@
 			}
 
 			#character-overview div,
-			#character-overview-npc div {
+			#character-overview-npc div,
+			#character-overview-a div,
+			#character-overview-s div {
 				width: 128px;
 				height: 128px;
 				display: flex;
@@ -36,23 +44,32 @@
 			}
 
 			#character-overview img,
-			#character-overview-npc img {
+			#character-overview-npc img,
+			#character-overview-a img,
+			#character-overview-s img {
 				width: 100%;
 				height: 100%;
 				object-fit: cover;
 				/* 保证图片填满容器并裁剪掉溢出部分 */
 				border-radius: 8px;
 				/* 给图片添加圆角 */
-				transition: transform 0.3s ease;
+
 				/* 为图片的放大效果添加过渡 */
 			}
 
 			#character-overview div:hover,
 			#character-overview-npc div:hover,
-			#character-overview img:hover,
-			#character-overview-npc img:hover {
-			    transform: scale(1.05);
-			    /* 鼠标悬停时轻微放大 */
+			#character-overview-a div:hover,
+			#character-overview-s div:hover {
+				transform: scale(1.3);
+				/* 鼠标悬停时轻微放大 */
+				transition: transform 0.3s ease;
+			}
+
+			#view-all div:hover {
+				transform: scale(1.05);
+				/* 鼠标悬停时轻微放大 */
+				transition: transform 0.3s ease;
 			}
 
 
@@ -106,8 +123,7 @@
 
 			#character-def-face {
 				height: 128px;
-				width: 1280px;
-				max-width: 100%;
+				max-width: 50%;
 				margin-top: 20px;
 				display: flex;
 				justify-self: center;
@@ -137,23 +153,52 @@
 				max-width: 100%;
 				max-height: 100%;
 			}
+			
+			#restore-btn {
+			  position: fixed;
+			  bottom: 20px;
+			  right: 20px;
+			  padding: 10px 20px;
+			  font-size: 16px;
+			  background-color: #007bff;
+			  color: white;
+			  border: none;
+			  border-radius: 5px;
+			  cursor: pointer;
+			  z-index: 1000;
+			}
+			
+			#restore-btn:hover {
+			  background-color: #0056b3;
+			}
 		</style>
 	</head>
 	<script>
+		//地魂男儿
 		const names = ["awt", "bic", "bin", "biz", "bun", "ckg", "ecg", "ecz", "har", "hit", "hiz",
 			"hyu", "iga", "ina", "iwm", "iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not",
 			"oki", "osu", "oum", "owa", "sag", "san", "sim", "sin", "smu", "sur", "taj", "tnb", "tos", "wak", "ymt",
-			"yzm", 
+			"yzm",
 		];
-		const names_npc = ["a000", "a001", "a002", "a003", "a004", "a005", "a006", "a007", "a008", "a009", "a010", "a011",
+		//基础npc
+		const names_npc = ["n000", "n001", "n002", "n003", "n004", "n005", "n006", "n007", "n008", "n009"];
+		//妖兽
+		const names_a = ["a000", "a001", "a002", "a003", "a004", "a005", "a006", "a007", "a008", "a009", "a010", "a011",
 			"a012", "a015", "a016", "a018"
 		];
-		const names_all = names.concat(names_npc);
+		//剧情人物
+		const names_s = ["s000", "s001", "s002", "s003", "s004", "s005", "s006"];
+		//汇总
+		const names_all = names.concat(names_npc, names_a, names_s);
 
 		//角色概览-地魂男儿
 		const Character_overview = names.map(name => `overview/f_${name}.png`);
 		//角色概览-基础NPC
 		const Character_overview_npc = names_npc.map(name => `overview/f_${name}.png`);
+		//角色概览-妖兽
+		const Character_overview_a = names_a.map(name => `overview/f_${name}.png`);
+		//角色概览-剧情人物
+		const Character_overview_s = names_s.map(name => `overview/f_${name}.png`);
 		//角色技能图
 		const Character_skill = names_all.map(name => `skill/c_${name}.png`);
 		//角色表情图
@@ -203,6 +248,8 @@
 			// 获取展示角色概览图的父容器
 			const overviewContainer = document.getElementById('character-overview');
 			const overview_npcContainer = document.getElementById('character-overview-npc');
+			const overview_aContainer = document.getElementById('character-overview-a');
+			const overview_sContainer = document.getElementById('character-overview-s');
 
 			// 遍历 names_all(地魂男儿) 数组中的每个角色
 			names_all.forEach((name, index) => {
@@ -254,6 +301,56 @@
 				// 将创建的 div 添加到容器中
 				overview_npcContainer.appendChild(characterDiv);
 			});
+			// 遍历 names_a(妖兽) 数组中的每个角色
+			names_a.forEach((name, index) => {
+				// 创建新的 div 元素，id 为角色的名字
+				const characterDiv = document.createElement('div');
+				characterDiv.id = name;
+				characterDiv.className = 'chararcter-all-a';
+
+				// 创建 img 元素，src 为对应角色的概览图路径
+				const characterImage = document.createElement('img');
+				characterImage.src = Character_overview_a[index];
+
+				// 设置图片加载失败时的处理
+				characterImage.onerror = () => {
+					characterDiv.style.display = 'none'; // 隐藏包含图片的 div
+				};
+
+				// 为图片添加点击事件，触发 select 方法
+				characterImage.onclick = () => select(name);
+
+				// 将图片添加到 div 中
+				characterDiv.appendChild(characterImage);
+
+				// 将创建的 div 添加到容器中
+				overview_aContainer.appendChild(characterDiv);
+			});
+			// 遍历 names_s(剧情人物) 数组中的每个角色
+			names_s.forEach((name, index) => {
+				// 创建新的 div 元素，id 为角色的名字
+				const characterDiv = document.createElement('div');
+				characterDiv.id = name;
+				characterDiv.className = 'chararcter-all-s';
+
+				// 创建 img 元素，src 为对应角色的概览图路径
+				const characterImage = document.createElement('img');
+				characterImage.src = Character_overview_s[index];
+
+				// 设置图片加载失败时的处理
+				characterImage.onerror = () => {
+					characterDiv.style.display = 'none'; // 隐藏包含图片的 div
+				};
+
+				// 为图片添加点击事件，触发 select 方法
+				characterImage.onclick = () => select(name);
+
+				// 将图片添加到 div 中
+				characterDiv.appendChild(characterImage);
+
+				// 将创建的 div 添加到容器中
+				overview_sContainer.appendChild(characterDiv);
+			});
 		}
 
 		// 当点击图片时，将该图插入到 #character-avatar 中，并插入对应的技能图到 #character-skill
@@ -272,8 +369,14 @@
 			} else if (names_npc.includes(name)) {
 				// NPC
 				characterImageSrc = Character_overview_npc[names_npc.indexOf(name)];
+			} else if (names_a.includes(name)) {
+				//妖兽
+				characterImageSrc = Character_overview_a[names_a.indexOf(name)];
+			} else if (names_s.includes(name)) {
+				//妖兽
+				characterImageSrc = Character_overview_s[names_s.indexOf(name)];
 			}
-			
+
 			const avatarImage = document.createElement('img'); //单个头像
 			avatarImage.src = characterImageSrc;
 			console.log(avatarImage.src);
@@ -496,12 +599,19 @@
 			document.getElementById('nijitama-character').style.display = 'none';
 			document.getElementById('nijitama-npc').style.display = 'none';
 			document.getElementById('character-overview-npc').style.display = 'none';
+			document.getElementById('nijitama-a').style.display = 'none';
+			document.getElementById('character-overview-a').style.display = 'none';
+			document.getElementById('nijitama-s').style.display = 'none';
+			document.getElementById('character-overview-s').style.display = 'none';
+			document.getElementById('nijitama-view').style.display = 'none';
+			document.getElementById('view-all').style.display = 'none';
 
 			// 为 avatarImage 添加点击事件，点击时恢复页面初始状态
 			avatarImage.onclick = function() {
 				restorePage();
 			};
 		}
+
 
 
 		// 恢复页面初始状态
@@ -527,12 +637,21 @@
 			document.getElementById('character-christmas').innerHTML = ''; //圣诞节15
 			document.getElementById('character-ev').innerHTML = ''; //情人节16
 			document.getElementById('character-y-bath').innerHTML = ''; //浴室17
+			document.getElementById('view-img-tmb').innerHTML = ''; //魂守景趣
+			document.getElementById('view-img-cg').innerHTML = ''; //加载图
+			document.getElementById('view-img-other').innerHTML = ''; //浴其他
 
 			// 显示角色概览容器
 			document.getElementById('character-overview').style.display = 'flex';
 			document.getElementById('nijitama-character').style.display = 'flex';
 			document.getElementById('nijitama-npc').style.display = 'flex';
 			document.getElementById('character-overview-npc').style.display = 'flex';
+			document.getElementById('nijitama-a').style.display = 'flex';
+			document.getElementById('character-overview-a').style.display = 'flex';
+			document.getElementById('nijitama-s').style.display = 'flex';
+			document.getElementById('character-overview-s').style.display = 'flex';
+			document.getElementById('nijitama-view').style.display = 'flex';
+			document.getElementById('view-all').style.display = 'flex';
 		}
 
 		// 页面加载完成后调用 LoadOverview 方法
@@ -542,6 +661,9 @@
 		window.onload = function() {
 			//加载全部角色头像概览图
 			LoadOverview();
+			Loadview_img_tmb();
+			Loadcg_loading_nion();
+			Loadcg_loading_r();
 
 			//让表情图区域鼠标滚轮能控制左右滑动
 			// 获取 character-def-face 容器元素
@@ -580,12 +702,28 @@
 	<body>
 		<!--分类:地魂男儿-->
 		<div id="nijitama-character"><img src="title/地魂男儿.png" /></div>
-		<!--全角色概览-->
+		<!--地魂男儿概览-->
 		<div id="character-overview"></div>
 		<!--分类:基础NPC-->
 		<div id="nijitama-npc"><img src="title/基础NPC.png" /></div>
 		<!--npc概览-->
 		<div id="character-overview-npc"></div>
+		<!--分类:妖兽-->
+		<div id="nijitama-a"><img src="title/妖兽.png" /></div>
+		<!--妖兽概览-->
+		<div id="character-overview-a"></div>
+		<!--分类:剧情人物-->
+		<div id="nijitama-s"><img src="title/剧情人物.png" /></div>
+		<!--剧情人物概览-->
+		<div id="character-overview-s"></div>
+		<!--分类:魂百景-->
+		<div id="nijitama-view"><img src="title/魂百景.png" /></div>
+		<!--魂百景概览-->
+		<div id="view-all">
+			<div id="tm_b"><img src="title/魂守景趣.png" /></div>
+			<div id="cg_loading_nion"><img src="title/加载图.png" /></div>
+			<div id="cg_loading_r"><img src="title/其他.png" /></div>
+		</div>
 		<!--技能-->
 		<div id="character-skill"></div>
 		<!--头像-->
@@ -626,5 +764,182 @@
 		<div id="character-ev" class="picture"></div>
 		<!--浴室17-->
 		<div id="character-y-bath" class="picture"></div>
+		<!--魂百景-魂兽景趣-->
+		<div id="view-img-tmb" class="picture"></div>
+		<!--魂百景-加载图CG-->
+		<div id="view-img-cg" class="picture"></div>
+		<!--魂百景-其他-->
+		<div id="view-img-other" class="picture"></div>
 	</body>
+	<script>
+		function Loadview_img_tmb() {
+			//view-img-tmb
+			document.getElementById('tm_b').addEventListener('click', function() {
+				const imagePaths = [
+									'view/tm_b/tm_b0001.png',
+									'view/tm_b/tm_b0002.png',
+									'view/tm_b/tm_b0003.png',
+									'view/tm_b/tm_b0004.png',
+									'view/tm_b/tm_b0005.png',
+									'view/tm_b/tm_b0006.png',
+									'view/tm_b/tm_b0007.png',
+									'view/tm_b/tm_b0008.png',
+									'view/tm_b/tm_b0009.png',
+									'view/tm_b/tm_b0010.png',
+									'view/tm_b/tm_b0011.png',
+									'view/tm_b/tm_b0012.png',
+									'view/tm_b/tm_b0013.png',
+									'view/tm_b/tm_b0014.png',
+									'view/tm_b/tm_b0015.png',
+									'view/tm_b/tm_b0016.png',
+									'view/tm_b/tm_b0017.png',
+									'view/tm_b/tm_b0018.png',
+									'view/tm_b/tm_b0019.png',
+									'view/tm_b/tm_b0020.png',
+									'view/tm_b/tm_b0021.png',
+									'view/tm_b/tm_b0022.png',
+									'view/tm_b/tm_b0023.png',
+									'view/tm_b/tm_b0024.png',
+									'view/tm_b/tm_b0025.png',
+									'view/tm_b/tm_b0026.png',
+									'view/tm_b/tm_b0027.png',
+									'view/tm_b/tm_b0028.png',
+									'view/tm_b/tm_b0029.png',
+									'view/tm_b/tm_b0030.png',
+									'view/tm_b/tm_b0031.png',
+									'view/tm_b/tm_b0032.png',
+									'view/tm_b/tm_b0033.png'
+								];
+
+				// 创建一个新的div容器来存放图片
+				const newDiv = document.createElement('div');
+
+				// 遍历图片路径数组，创建并添加图片元素到新的div中
+				imagePaths.forEach(function(path) {
+					const imgElement = document.createElement('img');
+					imgElement.src = path;
+					imgElement.alt = `Image from ${path}`;
+					newDiv.appendChild(imgElement);
+				});
+
+				// 获取body下的第一级div
+				const firstLevelDivs = document.querySelectorAll('body > div');
+
+				// 隐藏所有第一级div
+				firstLevelDivs.forEach(function(div) {
+					div.style.display = 'none';
+				});
+
+				// 将新创建的div添加到view-img-tmb中
+				const viewImgDiv = document.getElementById('view-img-tmb');
+				viewImgDiv.innerHTML = ''; // 清空之前的内容
+				viewImgDiv.appendChild(newDiv);
+				
+				// 在view-img-tmb中创建并添加一个按钮
+				  const restoreButton = document.createElement('button');
+				  restoreButton.id = 'restore-btn';
+				  restoreButton.textContent = '返回';
+				  restoreButton.addEventListener('click', restorePage);
+				  viewImgDiv.appendChild(restoreButton);
+				  
+				// 显示view-img-tmb
+				viewImgDiv.style.display = 'flex';
+			});
+
+		}
+
+
+		function Loadcg_loading_nion() {
+
+			document.getElementById('cg_loading_nion').addEventListener('click', function() {
+				const imagePaths = [
+					'view/cg_loading_nion/cg_loading_nion001.png',
+					'view/cg_loading_nion/cg_loading_nion002.png',
+					'view/cg_loading_nion/cg_loading_nion003.png',
+					'view/cg_loading_nion/cg_loading_nion004.png',
+					'view/cg_loading_nion/cg_loading_nion005.png',
+					'view/cg_loading_nion/cg_loading_nion006.png',
+					'view/cg_loading_nion/cg_loading_nion007.png',
+					'view/cg_loading_nion/cg_loading_nion008.png',
+				];
+
+				// 创建一个新的div容器来存放图片
+				const newDiv = document.createElement('div');
+
+				// 遍历图片路径数组，创建并添加图片元素到新的div中
+				imagePaths.forEach(function(path) {
+					const imgElement = document.createElement('img');
+					imgElement.src = path;
+					newDiv.appendChild(imgElement);
+				});
+
+				// 获取body下的第一级div
+				const firstLevelDivs = document.querySelectorAll('body > div');
+				
+				// 隐藏所有第一级div
+				firstLevelDivs.forEach(function(div) {
+					div.style.display = 'none';
+				});
+				
+				// 将新创建的div添加到view-img-cg中
+				const viewImgDiv = document.getElementById('view-img-cg');
+				viewImgDiv.innerHTML = ''; // 清空之前的内容
+				viewImgDiv.appendChild(newDiv);
+				
+				// 在view-img-cg中创建并添加一个按钮
+				  const restoreButton = document.createElement('button');
+				  restoreButton.id = 'restore-btn';
+				  restoreButton.textContent = '返回';
+				  restoreButton.addEventListener('click', restorePage);
+				  viewImgDiv.appendChild(restoreButton);
+				  
+				// 显示view-img-cg
+				viewImgDiv.style.display = 'flex';
+			});
+		}
+
+		//cg_loading_r
+		function Loadcg_loading_r() {
+			document.getElementById('cg_loading_r').addEventListener('click', function() {
+				const imagePaths = [
+					'view/cg_loading_r/cg_loading_r001.png',
+					'view/cg_loading_r/cg_loading_r002.png',
+					'view/cg_loading_r/cg_loading_r004.png'
+				];
+
+				// 创建一个新的div容器来存放图片
+				const newDiv = document.createElement('div');
+
+				// 遍历图片路径数组，创建并添加图片元素到新的div中
+				imagePaths.forEach(function(path) {
+					const imgElement = document.createElement('img');
+					imgElement.src = path;
+					newDiv.appendChild(imgElement);
+				});
+
+				// 获取body下的第一级div
+				const firstLevelDivs = document.querySelectorAll('body > div');
+				
+				// 隐藏所有第一级div
+				firstLevelDivs.forEach(function(div) {
+					div.style.display = 'none';
+				});
+
+				// 将新创建的div添加到view-img-other中
+				const viewImgDiv = document.getElementById('view-img-other');
+				viewImgDiv.innerHTML = ''; // 清空之前的内容
+				viewImgDiv.appendChild(newDiv);
+				
+				// 在view-img-other中创建并添加一个按钮
+				  const restoreButton = document.createElement('button');
+				  restoreButton.id = 'restore-btn';
+				  restoreButton.textContent = '返回';
+				  restoreButton.addEventListener('click', restorePage);
+				  viewImgDiv.appendChild(restoreButton);
+				  
+				// 显示view-img-other
+				viewImgDiv.style.display = 'flex';
+			});
+		}
+	</script>
 </html>
