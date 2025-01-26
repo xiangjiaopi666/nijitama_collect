@@ -1,429 +1,98 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 	<head>
-		<meta charset="utf-8">
-		<title>nijitama角色收集</title>
-		<style>
-			#character-overview,
-			#character-overview-npc {
-				display: flex;
-				flex-wrap: wrap;
-				/* 使子项换行 */
-				gap: 10px;
-				/* 角色之间的间隙 */
-				justify-content: center;
-				/* 水平居中对齐 */
-			}
-
-			#nijitama-character,
-			#nijitama-npc {
-				display: flex;
-				padding-top: 10px;
-				padding-bottom: 10px;
-				justify-content: center;
-				/* 水平居中对齐 */
-			}
-
-			#character-overview div,
-			#character-overview-npc div {
-				width: 128px;
-				height: 128px;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				overflow: hidden;
-				/* 裁剪掉溢出的部分 */
-			}
-
-			#character-overview img,
-			#character-overview-npc img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				/* 保证图片填满容器并裁剪掉溢出部分 */
-				border-radius: 8px;
-				/* 给图片添加圆角 */
-				transition: transform 0.3s ease;
-				/* 为图片的放大效果添加过渡 */
-			}
-
-			#character-overview div,
-			#character-overview-npc div:hover {
-				transform: scale(1.05);
-				/* 鼠标悬停时轻微放大 div */
-			}
-
-			#character-overview img,
-			#character-overview-npc img:hover {
-				transform: scale(1.05);
-				/* 鼠标悬停时轻微放大图片 */
-			}
-
-			#character-avatar {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				margin-top: 20px;
-				position: relative;
-				height: 128px;
-			}
-
-			#character-avatar img {
-				position: absolute;
-				transition: opacity 0.3s ease;
-				width: 128px;
-				height: 128px;
-				object-fit: cover;
-				border-radius: 8px;
-				cursor: pointer;
-				/* 鼠标悬停时变为可点击 */
-			}
-
-			#character-avatar img.back-overlay {
-				z-index: 1;
-				opacity: 0;
-				/* 初始状态透明 */
-			}
-
-			#character-avatar:hover img.back-overlay {
-				opacity: 1;
-				/* 悬停时显示 */
-				pointer-events: none;
-				/* 允许事件穿透到下层 */
-			}
-
-			#character-skill {
-				display: flex;
-				justify-content: center;
-				margin-top: 10px;
-			}
-
-			#character-skill img {
-				display: block;
-				margin: 0 auto;
-				max-width: 100%;
-				/* 确保图片不会超出容器宽度 */
-				max-height: 100%;
-				/* 确保图片不会超出容器高度 */
-			}
-
-			#character-def-face {
-				height: 128px;
-				width: 1280px;
-				max-width: 100%;
-				margin-top: 20px;
-				display: flex;
-				justify-self: center;
-				overflow-x: auto;
-				overflow-y: hidden;
-			}
-
-			/*隐藏表情图界面的滚动条*/
-			#character-def-face::-webkit-scrollbar {
-				display: none;
-			}
-
-			#character-def-face img {
-				height: 128px;
-				object-fit: cover;
-				border-radius: 8px;
-				margin-right: 20px;
-			}
-
-			.picture {
-				display: flex;
-				justify-content: center;
-				margin-top: 10px;
-			}
-
-			.picture img {
-				max-width: 100%;
-				max-height: 100%;
-			}
-		</style>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>弹框示例</title>
+		<link rel="stylesheet" href="style.css">
 	</head>
+	<style>
+		/* 样式设置 */
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			/* 防止在弹框显示时页面滚动 */
+		}
+
+		#content {
+			display: none;
+			/* 页面内容初始时隐藏 */
+		}
+
+		.popup-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.7);
+			/* 背景透明黑色 */
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 1000;
+			/* 确保弹框在最上层 */
+		}
+
+		.popup-content {
+			background-color: white;
+			padding: 20px;
+			border-radius: 8px;
+			text-align: center;
+			max-width: 400px;
+			width: 80%;
+		}
+
+		#ok-btn {
+			background-color: #4CAF50;
+			/* OK按钮的背景色 */
+			color: white;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 16px;
+		}
+
+		#ok-btn:hover {
+			background-color: #45a049;
+		}
+	</style>
 	<script>
-		const names = ["awt", "bic", "bin", "biz", "bun", "ckg", "ecg", "ecz", "har", "hit", "hiz",
-			"hyu", "iga", "ina", "iwm", "iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not",
-			"oki", "osu", "oum", "owa", "sag", "san", "sim", "sin", "smu", "sur", "taj", "tnb", "tos", "wak", "ymt",
-			"yzm"
-		];
-		const names_npc = ["a000", "a001", "a002", "a003", "a004", "a005", "a006", "a007", "a008", "a009", "a010", "a011",
-			"a012", "a015", "a016", "a018"
-		];
-		const names_all = names.concat(names_npc);
+		document.addEventListener("DOMContentLoaded", function() {
+			// 获取弹框和内容部分
+			const popup = document.getElementById("popup");
+			const content = document.getElementById("content");
+			const okButton = document.getElementById("ok-btn");
 
-		//角色概览-地魂男儿
-		const Character_overview = names.map(name => `overview/f_${name}.png`);
-		console.log(Character_overview);
-		//角色概览-基础NPC
-		const Character_overview_npc = names_npc.map(name => `overview/f_${name}.png`);
-		//角色技能图
-		const Character_skill = names_all.map(name => `skill/c_${name}.png`);
-		//角色表情图
-		const Character_def_face = names_all.flatMap(name => {
-			return Array.from({
-					length: 21
-				}, (_, number) =>
-				`face/s_${name}_def_face_${String(number).padStart(2, '0')}.png`
-			);
+			// 点击 OK 按钮后隐藏弹框并显示页面内容
+			okButton.addEventListener("click", function() {
+				popup.style.display = "none"; // 隐藏弹框
+				content.style.display = "block"; // 显示页面内容
+				document.body.style.overflow = "auto"; // 解除页面的滚动限制
+			});
 		});
-		//默认-站立
-		const Character_def_body = names_all.map(name => `body/s_${name}_def_body.png`);
-		//默认-战斗
-		const Character_b_def_body = names_all.map(name => `body/b_${name}_def_body.png`);
-		//默认-战损
-		const Character_b_def_dbody = names_all.map(name => `body/b_${name}_def_dbody.png`);
-		//春夏服-站立
-		const Character_ss_body = names_all.map(name => `body/s_${name}_ss_body.png`);
-		//春夏服-战斗
-		const Character_b_ss_body = names_all.map(name => `body/b_${name}_ss_body.png`);
-		//春夏服-战损
-		const Character_b_ss_dbody = names_all.map(name => `body/b_${name}_ss_dbody.png`);
-		//秋冬服-站立
-		const Character_aw_body = names_all.map(name => `body/s_${name}_aw_body.png`);
-		//秋冬服-战斗
-		const Character_b_aw_body = names_all.map(name => `body/b_${name}_aw_body.png`);
-		//秋冬服-战损
-		const Character_b_aw_dbody = names_all.map(name => `body/b_${name}_aw_dbody.png`);
-		//相扑
-		const Character_sumo = names_all.map(name => `body/b_${name}_sumo_body.png`);
-		//洗澡
-		const Character_bath = names_all.map(name => `body/s_${name}_bath_body.png`);
-		//新年
-		const Character_ny = names_all.map(name => `body/s_${name}_ny_body.png`);
-		//赞助
-		const Character_patronag = names_all.map(name => `body/s_${name}_pa_body.png`);
-		//泳装
-		const Character_swim = names_all.map(name => `body/s_${name}_swim_body.png`);
-		//圣诞节
-		const Character_christmas = names_all.map(name => `body/s_${name}_xmas_body.png`);
-		//情人节
-		const Character_ev = names_all.map(name => `body/s_${name}_ev_body.png`);
-		//浴室
-		const Character_y_bath = names_all.map(name => `body/y_${name}_body.png`);
-		// 加载角色概览图
-		function LoadOverview() {
-			// 获取展示角色概览图的父容器
-			const overviewContainer = document.getElementById('character-overview');
-			const overview_npcContainer = document.getElementById('character-overview-npc');
-
-			// 遍历 names_all(地魂男儿) 数组中的每个角色
-			names_all.forEach((name, index) => {
-				// 创建新的 div 元素，id 为角色的名字
-				const characterDiv = document.createElement('div');
-				characterDiv.id = name;
-				characterDiv.className = 'chararcter-all';
-
-				// 创建 img 元素，src 为对应角色的概览图路径
-				const characterImage = document.createElement('img');
-				characterImage.src = Character_overview[index];
-
-				// 设置图片加载失败时的处理
-				characterImage.onerror = () => {
-					characterDiv.style.display = 'none'; // 隐藏包含图片的 div
-				};
-
-				// 为图片添加点击事件，触发 select 方法
-				characterImage.onclick = () => select(name);
-
-				// 将图片添加到 div 中
-				characterDiv.appendChild(characterImage);
-
-				// 将创建的 div 添加到容器中
-				overviewContainer.appendChild(characterDiv);
-			});
-			// 遍历 names_all_npc(基础npc) 数组中的每个角色
-			names_npc.forEach((name, index) => {
-				// 创建新的 div 元素，id 为角色的名字
-				const characterDiv = document.createElement('div');
-				characterDiv.id = name;
-				characterDiv.className = 'chararcter-all-npc';
-
-				// 创建 img 元素，src 为对应角色的概览图路径
-				const characterImage = document.createElement('img');
-				characterImage.src = Character_overview_npc[index];
-
-				// 设置图片加载失败时的处理
-				characterImage.onerror = () => {
-					characterDiv.style.display = 'none'; // 隐藏包含图片的 div
-				};
-
-				// 为图片添加点击事件，触发 select 方法
-				characterImage.onclick = () => select(name);
-
-				// 将图片添加到 div 中
-				characterDiv.appendChild(characterImage);
-
-				// 将创建的 div 添加到容器中
-				overview_npcContainer.appendChild(characterDiv);
-			});
-		}
-
-		// 当点击图片时，将该图插入到 #character-avatar 中，并插入对应的技能图到 #character-skill
-		function select(name) {
-			// 清空 avatar 和 skill 和 def-face 等容器
-			// 获取对应的图片路径
-			// 创建新的 img 元素，设置 src 为点击图片的路径
-			// 将图片插入到对应容器
-			const avatarContainer = document.getElementById('character-avatar'); //全角色概览图
-			avatarContainer.innerHTML = '';
-			//const characterImageSrc = Character_overview[names_all.indexOf(name)];
-			let characterImageSrc;
-			if (names.includes(name)) {
-				// 地魂男儿
-				characterImageSrc = Character_overview[names_all.indexOf(name)];
-			} else if (names_npc.includes(name)) {
-				// NPC
-				characterImageSrc = Character_overview_npc[names_npc.indexOf(name)];
-			}
-			const avatarImage = document.createElement('img'); //单个头像
-			avatarImage.src = characterImageSrc;
-			console.log(avatarImage.src)
-			avatarContainer.appendChild(avatarImage);
-
-			const skillContainer = document.getElementById('character-skill'); //技能
-			skillContainer.innerHTML = '';
-			const skillImageSrc = Character_skill[names_all.indexOf(name)];
-			const skillImage = document.createElement('img'); //技能
-			skillImage.src = skillImageSrc;
-			// 如果技能图加载失败，使用默认的替代图
-			skillImage.onerror = function() {
-				skillImage.src = 'error/error_skill.png';
-			};
-			skillContainer.appendChild(skillImage);
-
-			const defFaceContainer = document.getElementById('character-def-face'); //表情
-			defFaceContainer.innerHTML = '';
-
-			const defaultbodyContainer = document.getElementById('character-default-body'); //默认1
-			defaultbodyContainer.innerHTML = ''; //默认1
-			const defaultbodyImageSrc = Character_def_body[names_all.indexOf(name)]; //默认1
-			const defaultbodyImage = document.createElement('img'); //默认1
-			defaultbodyImage.src = defaultbodyImageSrc;
-			defaultbodyImage.onerror = function() {
-				defaultbodyImage.src = 'error/error_defult_body.png';
-			}
-			defaultbodyContainer.appendChild(defaultbodyImage); //默认1
-
-
-
-			// 创建用于覆盖的 back.png 图片
-			const backImage = document.createElement('img');
-			backImage.src = 'error/back.png';
-			backImage.className = 'back-overlay';
-			backImage.onerror = function() {
-				backImage.style.display = 'none'; // 如果 back.png 加载失败，隐藏它
-			};
-
-			// 将覆盖图片和头像图片一起插入到 avatar 容器
-			avatarContainer.appendChild(avatarImage);
-			avatarContainer.appendChild(backImage);
-
-
-			// 获取并插入对应的表情图
-			for (let number = 0; number < 21; number++) {
-				const faceDiv = document.createElement('div'); // 创建容器 div
-				const faceImage = document.createElement('img');
-				faceImage.src = Character_def_face[names_all.indexOf(name) * 21 + number];
-				//console.log(faceImage.src);
-				// 如果表情图加载失败，隐藏对应的 div
-				faceImage.onerror = function() {
-					faceDiv.style.display = 'none'; // 隐藏包含表情图的 div
-				};
-
-				// 将 faceImage 添加到 faceDiv 中，然后再添加到 defFaceContainer
-				faceDiv.appendChild(faceImage);
-				defFaceContainer.appendChild(faceDiv);
-			}
-
-			// 隐藏角色概览容器
-			document.getElementById('character-overview').style.display = 'none';
-			document.getElementById('nijitama-character').style.display = 'none';
-			document.getElementById('nijitama-npc').style.display = 'none';
-			document.getElementById('character-overview-npc').style.display = 'none';
-
-			// 为 avatarImage 添加点击事件，点击时恢复页面初始状态
-			avatarImage.onclick = function() {
-				restorePage();
-			};
-		}
-
-
-		// 恢复页面初始状态
-		function restorePage() {
-			// 清空 avatar 和 skill 容器
-			document.getElementById('character-avatar').innerHTML = '';
-			document.getElementById('character-skill').innerHTML = '';
-			document.getElementById('character-def-face').innerHTML = '';
-			document.getElementById('character-default-body').innerHTML = ''; //默认1
-
-			// 显示角色概览容器
-			document.getElementById('character-overview').style.display = 'flex';
-			document.getElementById('nijitama-character').style.display = 'flex';
-			document.getElementById('nijitama-npc').style.display = 'flex';
-			document.getElementById('character-overview-npc').style.display = 'flex';
-		}
-
-		// 页面加载完成后调用 LoadOverview 方法
-		//window.onload = LoadOverview;
-
-		// 确保在页面加载完成后执行代码
-		window.onload = function() {
-			//加载全部角色头像概览图
-			LoadOverview();
-
-			//让表情图区域鼠标滚轮能控制左右滑动
-			// 获取 character-def-face 容器元素
-			const defFaceContainer = document.getElementById('character-def-face');
-
-			// 如果 defFaceContainer 存在，绑定事件
-			if (defFaceContainer) {
-				// 当鼠标进入 character-def-face 容器时
-				defFaceContainer.addEventListener('mouseenter', function() {
-					// 改变滚动行为，监听水平滚动
-					defFaceContainer.addEventListener('wheel', handleHorizontalScroll);
-				});
-
-				// 当鼠标离开 character-def-face 容器时
-				defFaceContainer.addEventListener('mouseleave', function() {
-					// 恢复垂直滚动行为
-					defFaceContainer.removeEventListener('wheel', handleHorizontalScroll);
-				});
-			} else {
-				console.error('#character-def-face 元素未找到');
-			}
-
-			// 滚轮事件的处理函数，控制左右滚动
-			function handleHorizontalScroll(event) {
-				// 阻止默认的垂直滚动行为
-				event.preventDefault();
-
-				// 根据滚轮的方向设置水平滚动
-				defFaceContainer.scrollLeft += event.deltaY; // 使用 deltaY 来控制 scrollLeft
-			}
-		};
 	</script>
-
-
-
 	<body>
-		<!--分类:地魂男儿-->
-		<div id="nijitama-character"><img src="title/地魂男儿.png" /></div>
-		<!--全角色概览-->
-		<div id="character-overview"></div>
-		<!--分类:基础NPC-->
-		<div id="nijitama-npc"><img src="title/基础NPC.png" /></div>
-		<!--npc概览-->
-		<div id="character-overview-npc"></div>
-		<!--技能-->
-		<div id="character-skill"></div>
-		<!--头像-->
-		<div id="character-avatar"></div>
-		<!--所有表情-->
-		<div id="character-def-face"></div>
-		<!--默认站立1-->
-		<div id="character-default-body" class="picture"></div>
+		<!-- 页面内容 -->
+		<div id="content">
+			<h1>欢迎访问我的网站！</h1>
+			<p>这是网站的主要内容。</p>
+		</div>
 
+		<!-- 弹框 -->
+		<div id="popup" class="popup-overlay">
+			<div class="popup-content">
+				<h2>欢迎来到网站</h2>
+				<p>请阅读以下信息：</p>
+				<p>这里可以是预设的文本内容，比如一些注意事项。</p>
+				<p>如有需要，点击此<a href="https://example.com" target="_blank">超链接</a>了解更多。</p>
+				<button id="ok-btn">OK</button>
+			</div>
+		</div>
+
+		<script src="script.js"></script>
 	</body>
 </html>
