@@ -133,14 +133,16 @@ body {
 			}
 
 			#character-def-face {
-				min-width: 128px;
-				height: 128px;
-				max-width: 50%;
-				margin-top: 20px;
-				display: flex;
-				justify-self: center;
-				overflow-x: auto;
-				overflow-y: hidden;
+			    min-width: 128px;
+			    height: 128px;
+			    max-width: 50%;  /* 保持最大宽度限制 */
+			    margin-top: 20px;
+			    display: flex;
+			    justify-self: center;
+			    overflow-x: auto;
+			    overflow-y: hidden;
+			    scroll-snap-type: x mandatory;  /* 启用水平滚动对齐 */
+				justify-content: flex-start;  /* 确保图片从左侧排列 */
 			}
 
 			/*隐藏表情图界面的滚动条*/
@@ -157,9 +159,13 @@ body {
 			}
 
 			.nijitama_people {
-				display: flex;
-				justify-content: center;
-				margin-top: 10px;
+			    display: flex;
+			    justify-content: center;  /* 确保图片从左侧排列 */
+			    margin-top: 10px;
+			}
+			
+			.nijitama_people > div {
+			    scroll-snap-align: start;  /* 每张图片对齐到容器的起始位置 */
 			}
 
 			.nijitama_people img {
