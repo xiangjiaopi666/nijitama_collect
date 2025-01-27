@@ -206,7 +206,10 @@ function select(name) {
 
 	const avatarImage = document.createElement('img'); //单个头像
 	avatarImage.src = characterImageSrc;
-	console.log(avatarImage.src);
+	avatarImage.onerror = function() {
+			avatarImage.src = Character_def_face[names_all.indexOf(name) * 21 + 0];
+			console.log("该角色不存在默认头像，用第一张表情图代替");
+		}
 	avatarContainer.appendChild(avatarImage);
 
 	const skillContainer = document.getElementById('character-skill'); //技能
