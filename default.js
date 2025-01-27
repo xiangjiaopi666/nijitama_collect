@@ -1,72 +1,69 @@
 //地魂男儿
-const names = ["awt", "bic", "bin", "biz", "bun", "ckg", "ecg", "ecz", "har", "hit", "hiz",
-	"hyu", "iga", "ina", "iwm", "iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not",
-	"oki", "osu", "oum", "owa", "sag", "san", "sim", "sin", "smu", "sur", "taj", "tnb", "tos", "wak", "ymt",
-	"yzm",
+const names = ["awt", "bic", "bin", "biz", "bun", "ckg", "ecg", "ecz", "har", "hit", "hiz", "hyu", "iga", "ina", "iwm",
+	"iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not", "oki", "osu", "oum", "owa", "sag",
+	"san", "sim", "sin", "smu", "sur", "taj", "tnb", "tos", "wak", "ymt", "yzm"
 ];
 //基础npc
 const names_npc = ["n000", "n001", "n002", "n003", "n004", "n005", "n006", "n007", "n008", "n009"];
 //妖兽
-const names_a = ["a000", "a001", "a002", "a003", "a004", "a005", "a006", "a007", "a008", "a009", "a010", "a011",
-	"a012", "a015", "a016", "a018"
-];
+const names_a = ["a000", "a001", "a002", "a003", "a005", "a006", "a007", "a011", "a012", "a015", "a016", "a018"];
 //剧情人物
-const names_s = ["s000", "s001", "s002", "s003", "s004", "s005", "s006"];
+const names_s = ["s000", "s001", "s002", "s003", "s004", "s005", "s006", "s007", "s008", "s011", "s012", "s013"];
 //汇总
 const names_all = names.concat(names_npc, names_a, names_s);
 
 //角色概览-地魂男儿
-const Character_overview = names.map(name => `overview/f_${name}.png`);
+const Character_overview = names.map(name => `character/${name}/f_${name}.png`);
 //角色概览-基础NPC
-const Character_overview_npc = names_npc.map(name => `overview/f_${name}.png`);
+const Character_overview_npc = names_npc.map(name => `character/${name}/f_${name}.png`);
 //角色概览-妖兽
-const Character_overview_a = names_a.map(name => `overview/f_${name}.png`);
+const Character_overview_a = names_a.map(name => `character/${name}/f_${name}.png`);
 //角色概览-剧情人物
-const Character_overview_s = names_s.map(name => `overview/f_${name}.png`);
+const Character_overview_s = names_s.map(name => `character/${name}/f_${name}.png`);
 //角色技能图
-const Character_skill = names_all.map(name => `skill/c_${name}.png`);
+const Character_skill = names_all.map(name => `character/${name}/c_${name}.png`);
 //角色表情图
 const Character_def_face = names_all.flatMap(name => {
 	return Array.from({
 			length: 21
 		}, (_, number) =>
-		`face/s_${name}_def_face_${String(number).padStart(2, '0')}.png`
+		`character/${name}/s_${name}_def_face_${String(number).padStart(2, '0')}.png`
 	);
 });
 //默认-站立
-const Character_def_body = names_all.map(name => `body/s_${name}_def_body.png`);
+const Character_def_body = names_all.map(name => `character/${name}/s_${name}_def_body.png`);
 //默认-战斗
-const Character_b_def_body = names_all.map(name => `body/b_${name}_def_body.png`);
+const Character_b_def_body = names_all.map(name => `character/${name}/b_${name}_def_body.png`);
 //默认-战损
-const Character_b_def_dbody = names_all.map(name => `body/b_${name}_def_dbody.png`);
+const Character_b_def_dbody = names_all.map(name => `character/${name}/b_${name}_def_dbody.png`);
 //春夏服-站立
-const Character_ss_body = names_all.map(name => `body/s_${name}_ss_body.png`);
+const Character_ss_body = names_all.map(name => `character/${name}/s_${name}_ss_body.png`);
 //春夏服-战斗
-const Character_b_ss_body = names_all.map(name => `body/b_${name}_ss_body.png`);
+const Character_b_ss_body = names_all.map(name => `character/${name}/b_${name}_ss_body.png`);
 //春夏服-战损
-const Character_b_ss_dbody = names_all.map(name => `body/b_${name}_ss_dbody.png`);
+const Character_b_ss_dbody = names_all.map(name => `character/${name}/b_${name}_ss_dbody.png`);
 //秋冬服-站立
-const Character_aw_body = names_all.map(name => `body/s_${name}_aw_body.png`);
+const Character_aw_body = names_all.map(name => `character/${name}/s_${name}_aw_body.png`);
 //秋冬服-战斗
-const Character_b_aw_body = names_all.map(name => `body/b_${name}_aw_body.png`);
+const Character_b_aw_body = names_all.map(name => `character/${name}/b_${name}_aw_body.png`);
 //秋冬服-战损
-const Character_b_aw_dbody = names_all.map(name => `body/b_${name}_aw_dbody.png`);
+const Character_b_aw_dbody = names_all.map(name => `character/${name}/b_${name}_aw_dbody.png`);
 //相扑
-const Character_sumo = names_all.map(name => `body/b_${name}_sumo_body.png`);
+const Character_sumo = names_all.map(name => `character/${name}/b_${name}_sumo_body.png`);
 //洗澡
-const Character_bath = names_all.map(name => `body/s_${name}_bath_body.png`);
+const Character_bath = names_all.map(name => `character/${name}/s_${name}_bath_body.png`);
 //新年
-const Character_ny = names_all.map(name => `body/s_${name}_ny_body.png`);
+const Character_ny = names_all.map(name => `character/${name}/s_${name}_ny_body.png`);
 //赞助
-const Character_patronag = names_all.map(name => `body/s_${name}_pa_body.png`);
+const Character_patronag = names_all.map(name => `character/${name}/s_${name}_pa_body.png`);
 //泳装
-const Character_swim = names_all.map(name => `body/s_${name}_swim_body.png`);
+const Character_swim = names_all.map(name => `character/${name}/s_${name}_swim_body.png`);
 //圣诞节
-const Character_christmas = names_all.map(name => `body/s_${name}_xmas_body.png`);
+const Character_christmas = names_all.map(name => `character/${name}/s_${name}_xmas_body.png`);
 //情人节
-const Character_ev = names_all.map(name => `body/s_${name}_ev_body.png`);
+const Character_ev = names_all.map(name => `character/${name}/s_${name}_ev_body.png`);
 //浴室
-const Character_y_bath = names_all.map(name => `body/y_${name}_body.png`);
+const Character_y_bath = names_all.map(name => `character/${name}/y_${name}_body.png`);
 // 加载角色概览图
 function LoadOverview() {
 	// 获取展示角色概览图的父容器
@@ -75,8 +72,8 @@ function LoadOverview() {
 	const overview_aContainer = document.getElementById('character-overview-a');
 	const overview_sContainer = document.getElementById('character-overview-s');
 
-	// 遍历 names_all(地魂男儿) 数组中的每个角色
-	names_all.forEach((name, index) => {
+	// 遍历 names(地魂男儿) 数组中的每个角色
+	names.forEach((name, index) => {
 		// 创建新的 div 元素，id 为角色的名字
 		const characterDiv = document.createElement('div');
 		characterDiv.id = name;
@@ -88,7 +85,7 @@ function LoadOverview() {
 
 		// 设置图片加载失败时的处理
 		characterImage.onerror = () => {
-			characterDiv.style.display = 'none'; // 隐藏包含图片的 div
+			//characterDiv.style.display = 'none'; // 隐藏包含图片的 div
 		};
 
 		// 为图片添加点击事件，触发 select 方法
@@ -113,7 +110,9 @@ function LoadOverview() {
 
 		// 设置图片加载失败时的处理
 		characterImage.onerror = () => {
-			characterDiv.style.display = 'none'; // 隐藏包含图片的 div
+			//characterDiv.style.display = 'none'; // 隐藏包含图片的 div
+			//用对应角色的第一个表情代替
+			characterImage.src = Character_def_face[names_all.indexOf(name) * 21 + 0];
 		};
 
 		// 为图片添加点击事件，触发 select 方法
@@ -138,7 +137,9 @@ function LoadOverview() {
 
 		// 设置图片加载失败时的处理
 		characterImage.onerror = () => {
-			characterDiv.style.display = 'none'; // 隐藏包含图片的 div
+			//characterDiv.style.display = 'none'; // 隐藏包含图片的 div
+			//用对应角色的第一个表情代替
+			characterImage.src = Character_def_face[names_all.indexOf(name) * 21 + 0];
 		};
 
 		// 为图片添加点击事件，触发 select 方法
@@ -163,7 +164,9 @@ function LoadOverview() {
 
 		// 设置图片加载失败时的处理
 		characterImage.onerror = () => {
-			characterDiv.style.display = 'none'; // 隐藏包含图片的 div
+			//characterDiv.style.display = 'none'; // 隐藏包含图片的 div
+			//用对应角色的第一个表情代替
+			characterImage.src = Character_def_face[names_all.indexOf(name) * 21 + 0];
 		};
 
 		// 为图片添加点击事件，触发 select 方法
@@ -189,7 +192,7 @@ function select(name) {
 	let characterImageSrc;
 	if (names.includes(name)) {
 		// 地魂男儿
-		characterImageSrc = Character_overview[names_all.indexOf(name)];
+		characterImageSrc = Character_overview[names.indexOf(name)];
 	} else if (names_npc.includes(name)) {
 		// NPC
 		characterImageSrc = Character_overview_npc[names_npc.indexOf(name)];
