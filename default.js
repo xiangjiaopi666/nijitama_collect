@@ -49,7 +49,7 @@ const Character_b_aw_body = names_all.map(name => `character/${name}/b_${name}_a
 //秋冬服-战损
 const Character_b_aw_dbody = names_all.map(name => `character/${name}/b_${name}_aw_dbody.png`);
 //相扑
-const Character_sumo = names_all.map(name => `character/${name}/b_${name}_sumo_body.png`);
+const Character_sumo = names_all.map(name => `character/${name}/s_${name}_sumo_body.png`);
 //洗澡
 const Character_bath = names_all.map(name => `character/${name}/s_${name}_bath_body.png`);
 //新年
@@ -487,7 +487,8 @@ function restorePage() {
 	document.getElementById('character-y-bath').innerHTML = ''; //浴室17
 	document.getElementById('view-img-tmb').innerHTML = ''; //魂守景趣
 	document.getElementById('view-img-cg').innerHTML = ''; //加载图
-	document.getElementById('view-img-other').innerHTML = ''; //浴其他
+	document.getElementById('view-img-other').innerHTML = ''; //其他
+	document.getElementById('view-img-tms').innerHTML = ''; //小魂守
 
 	// 显示角色概览容器
 	document.getElementById('character-overview').style.display = 'flex';
@@ -517,6 +518,7 @@ window.onload = function() {
 	Loadcg_loading_nion();
 	Loadcg_loading_r();
 	Loadview_img_tmb();
+	Loadview_img_tms();
 
 	//让表情图区域鼠标滚轮能控制左右滑动
 	// 获取 character-def-face 容器元素
