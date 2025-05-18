@@ -1,5 +1,6 @@
 //地魂男儿
-const names = ["awt", "bic", "bin", "biz", "bun", "ckg", "ecg", "ecz", "har", "hit", "hiz", "hyu", "iga", "ina", "iwm",
+const names = ["awt", "bic", "bin", "biz", "bun", "ckg", "ckz", "ecg", "ecz", "har", "hit", "hiz", "hyu", "iga", "ina",
+	"iwm",
 	"iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not", "oki", "osu", "oum", "owa", "sag",
 	"san", "sim", "sin", "smu", "sur", "taj", "tnb", "tos", "wak", "ymt", "yzm"
 ];
@@ -62,6 +63,8 @@ const Character_swim = names_all.map(name => `character/${name}/s_${name}_swim_b
 const Character_christmas = names_all.map(name => `character/${name}/s_${name}_xmas_body.png`);
 //情人节
 const Character_ev = names_all.map(name => `character/${name}/s_${name}_ev_body.png`);
+//职业装
+const Character_skin1 = names_all.map(name => `character/${name}/s_${name}_skin1_body.png`);
 //浴室
 const Character_y_bath = names_all.map(name => `character/${name}/y_${name}_body.png`);
 // 加载角色概览图
@@ -207,9 +210,9 @@ function select(name) {
 	const avatarImage = document.createElement('img'); //单个头像
 	avatarImage.src = characterImageSrc;
 	avatarImage.onerror = function() {
-			avatarImage.src = Character_def_face[names_all.indexOf(name) * 21 + 0];
-			console.log("该角色不存在默认头像，用第一张表情图代替");
-		}
+		avatarImage.src = Character_def_face[names_all.indexOf(name) * 21 + 0];
+		console.log("该角色不存在默认头像，用第一张表情图代替");
+	}
 	avatarContainer.appendChild(avatarImage);
 
 	const skillContainer = document.getElementById('character-skill'); //技能
@@ -403,16 +406,27 @@ function select(name) {
 	}
 	evContainer.appendChild(evImage); //情人节16
 
-	const character_y_bathContainer = document.getElementById('character-y-bath'); //浴室17
-	character_y_bathContainer.innerHTML = ''; //浴室17
-	const character_y_bathImageSrc = Character_y_bath[names_all.indexOf(name)]; //浴室17
-	const character_y_bathImage = document.createElement('img'); //浴室17
+	const skin1Container = document.getElementById('character-skin1'); //职业装17
+	skin1Container.innerHTML = ''; //职业装17
+	const skin1ImageSrc = Character_skin1[names_all.indexOf(name)]; //职业装17
+	const skin1Image = document.createElement('img'); //职业装17
+	skin1Image.src = skin1ImageSrc;
+	skin1Image.onerror = function() {
+		skin1Image.src = 'error/error_skin1_body.png';
+		skin1Image.style.border = '1px dashed white';
+	}
+	skin1Container.appendChild(skin1Image); //职业装17
+
+	const character_y_bathContainer = document.getElementById('character-y-bath'); //浴室18
+	character_y_bathContainer.innerHTML = ''; //浴室18
+	const character_y_bathImageSrc = Character_y_bath[names_all.indexOf(name)]; //浴室18
+	const character_y_bathImage = document.createElement('img'); //浴室18
 	character_y_bathImage.src = character_y_bathImageSrc;
 	character_y_bathImage.onerror = function() {
 		character_y_bathImage.src = 'error/error_y_body.png';
 		character_y_bathImage.style.border = '1px dashed white';
 	}
-	character_y_bathContainer.appendChild(character_y_bathImage); //浴室17
+	character_y_bathContainer.appendChild(character_y_bathImage); //浴室18
 
 	// 创建用于覆盖的 back.png 图片
 	const backImage = document.createElement('img');
@@ -484,7 +498,8 @@ function restorePage() {
 	document.getElementById('character-swim').innerHTML = ''; //泳装14
 	document.getElementById('character-christmas').innerHTML = ''; //圣诞节15
 	document.getElementById('character-ev').innerHTML = ''; //情人节16
-	document.getElementById('character-y-bath').innerHTML = ''; //浴室17
+	document.getElementById('character-skin1').innerHTML = ''; //职业装(特殊)17
+	document.getElementById('character-y-bath').innerHTML = ''; //浴室18
 	document.getElementById('view-img-tmb').innerHTML = ''; //魂守景趣
 	document.getElementById('view-img-cg').innerHTML = ''; //加载图
 	document.getElementById('view-img-other').innerHTML = ''; //其他
