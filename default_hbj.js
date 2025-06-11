@@ -47,7 +47,14 @@ function Loadview_img_tmb() {
 			'view/tm_b/tm_b0033.png',
 			'view/tm_b/tm_b0034.png',
 			'view/tm_b/tm_b0035.png',
-			'view/tm_b/tm_b0036.png'
+			'view/tm_b/tm_b0036.png',
+			'view/tm_b/tm_b0037.png',
+			'view/tm_b/tm_b0038.png',
+			'view/tm_b/tm_b0039.png',
+			'view/tm_b/tm_b0040.png',
+			'view/tm_b/tm_b0041.png',
+			'view/tm_b/tm_b0042.png',
+			'view/tm_b/tm_b0043.png'
 		];
 
 		// 创建一个新的div容器来存放图片
