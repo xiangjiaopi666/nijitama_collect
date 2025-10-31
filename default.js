@@ -1,5 +1,5 @@
 //地魂男儿
-const names = ["awt", "bic", "bin", "biz", "bun", "ckg", "ckz", "ecg", "ecz", "har", "hit", "hiz", "hyu", "iga", "ina",
+const names = ["awt", "bic", "bin", "biz", "bun", "ckg", "ckz", "ecg", "ecz", "har", "hit", "hiz", "hyu", "iga", "iki", "ina",
 	"iwm",
 	"iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not", "oki", "osu", "oum", "owa", "sag",
 	"san", "sim", "sin", "smt", "smu", "sur", "taj", "tnb", "tos", "tou", "wak", "ymt", "yzm"
@@ -7,7 +7,7 @@ const names = ["awt", "bic", "bin", "biz", "bun", "ckg", "ckz", "ecg", "ecz", "h
 //基础npc
 const names_npc = ["n000", "n001", "n002", "n003", "n004", "n005", "n006", "n007", "n008", "n009"];
 //妖兽
-const names_a = ["a000", "a001", "a002", "a003", "a005", "a006", "a007", "a011", "a012", "a015", "a016", "a018"];
+const names_a = ["a000", "a001", "a002", "a003", "a005", "a006", "a007", "a011", "a012", "a015", "a016", "a018", "a019"];
 //剧情人物
 const names_s = ["s000", "s001", "s002", "s003", "s004", "s005", "s006", "s007", "s008", "s008_kid", "s011", "s012",
 	"s013", "s014", "s015"

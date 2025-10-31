@@ -54,7 +54,13 @@ function Loadview_img_tmb() {
 			'view/tm_b/tm_b0040.png',
 			'view/tm_b/tm_b0041.png',
 			'view/tm_b/tm_b0042.png',
-			'view/tm_b/tm_b0043.png'
+			'view/tm_b/tm_b0043.png',
+			'view/tm_b/tm_b0044.png',
+			'view/tm_b/tm_b0045.png',
+			'view/tm_b/tm_b0046.png',
+			'view/tm_b/tm_b0047.png',
+			'view/tm_b/tm_b0048.png',
+			'view/tm_b/tm_b0049.png'
 		];
 
 		// 创建一个新的div容器来存放图片
