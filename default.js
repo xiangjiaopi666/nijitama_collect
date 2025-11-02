@@ -5,7 +5,7 @@ const names = ["awt", "bic", "bin", "biz", "bun", "ckg", "ckz", "ecg", "ecz", "h
 	"san", "sim", "sin", "smt", "smu", "sur", "taj", "tnb", "tos", "tou", "wak", "ymt", "yzm"
 ];
 //基础npc
-const names_npc = ["n000", "n001", "n002", "n003", "n004", "n005", "n006", "n007", "n008", "n009"];
+const names_npc = ["n000", "n001", "n002", "n003", "n004", "n005", "n006", "n007", "n008", "n009", "n010", "n011"];
 //妖兽
 const names_a = ["a000", "a001", "a002", "a003", "a005", "a006", "a007", "a011", "a012", "a015", "a016", "a018", "a019"];
 //剧情人物
