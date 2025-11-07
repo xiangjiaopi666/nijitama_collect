@@ -2,7 +2,7 @@
 const names = ["awt", "bic", "bin", "biz", "bun", "ckg", "ckz", "ecg", "ecz", "har", "hit", "hiz", "hyu", "iga", "iki", "ina",
 	"iwm",
 	"iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not", "oki", "osu", "oum", "owa", "sag",
-	"san", "sim", "sin", "smt", "smu", "sur", "taj", "tnb", "tos", "tou", "wak", "ymt", "yzm"
+	"san", "sim", "sin", "smt", "smu", "suo", "sur", "taj", "tnb", "tos", "tou", "wak", "ymt", "yzm"
 ];
 //基础npc
 const names_npc = ["n000", "n001", "n002", "n003", "n004", "n005", "n006", "n007", "n008", "n009", "n010", "n011"];
