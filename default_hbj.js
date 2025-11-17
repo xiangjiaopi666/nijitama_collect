@@ -153,6 +153,7 @@ function Loadcg_loading_r() {
 		const imagePaths = [
 			'view/cg_loading_r/cg_loading_r001.png',
 			'view/cg_loading_r/cg_loading_r002.png',
+			'view/cg_loading_r/cg_loading_r003.png',
 			'view/cg_loading_r/cg_loading_r004.png'
 		];
 
@@ -198,7 +199,8 @@ function Loadview_img_tms() {
 			'view/tm_s/tm_s0002.png',
 			'view/tm_s/tm_s0003.png',
 			'view/tm_s/tm_s0004.png',
-			'view/tm_s/tm_s0005.png'
+			'view/tm_s/tm_s0005.png',
+			'view/tm_s/tm_s0006.png'
 		];
 
 		// 创建一个新的div容器来存放图片

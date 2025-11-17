@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>五组图片主/备用链接 + 红色边框示例</title>
+
+		<style>
+			body {
+				font-family: Arial;
+				margin: 20px;
+			}
+
+			h2 {
+				margin-top: 40px;
+			}
+
+			.grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+				gap: 14px;
+			}
+
+			.item {
+				border: 1px solid #e6e6e6;
+				padding: 10px;
+				background: #fff;
+				border-radius: 10px;
+				text-align: center;
+			}
+
+			img {
+				width: 100%;
+				height: 160px;
+				object-fit: contain;
+				background: #fafafa;
+				border-radius: 6px;
+				cursor: pointer;
+			}
+
+			.label {
+				margin-top: 8px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<h1>五组图片主/备用链接 + 红色边框</h1>
+
+		<h2>第一组：nion</h2>
+		<div id="gridA" class="grid"></div>
+
+		<h2>第二组：r</h2>
+		<div id="gridB" class="grid"></div>
+
+		<h2>第三组：tm_s</h2>
+		<div id="gridC" class="grid"></div>
+
+		<h2>第四组：tm_b</h2>
+		<div id="gridD" class="grid"></div>
+
+		<h2>第五组：cg_loading_j</h2>
+		<div id="gridE" class="grid"></div>
+
+		<script>
+			// ============================
+			// 工具：自动生成编号数组
+			// ============================
+			function makeRange({
+				start,
+				end,
+				pad,
+				exclude = [],
+				include = []
+			}) {
+				const set = new Set();
+				for (let i = start; i <= end; i++) {
+					const num = String(i).padStart(pad, "0");
+					if (!exclude.includes(num)) set.add(num);
+				}
+				include.forEach(n => set.add(n));
+				return Array.from(set).sort();
+			}
+
+			// ============================
+			// 五组范围定义
+			// ============================
+			const numsA = makeRange({
+				start: 1,
+				end: 10,
+				pad: 3
+			});
+			const numsB = makeRange({
+				start: 1,
+				end: 10,
+				pad: 3
+			});
+			const numsC = makeRange({
+				start: 1,
+				end: 10,
+				pad: 4
+			});
+			const numsD = makeRange({
+				start: 1,
+				end: 55,
+				pad: 4
+			});
+			const numsE = makeRange({
+				start: 1,
+				end: 10,
+				pad: 3
+			}); // 第五组
+
+			// ============================
+			// 链接前缀
+			// ============================
+			const mainPrefixes = [
+				"../view/cg_loading_nion/cg_loading_nion",
+				"../view/cg_loading_r/cg_loading_r",
+				"../view/tm_s/tm_s",
+				"../view/tm_b/tm_b",
+				"../view/cg_loading_j/cg_loading_j" // 第五组
+			];
+
+			const fallbackPrefixes = [
+				"https://tukitama.com/tamacolle/resources/cg_loading_nion",
+				"https://tukitama.com/tamacolle/resources/cg_loading_r",
+				"https://tukitama.com/tamacolle/resources/tm_s",
+				"https://tukitama.com/tamacolle/resources/tm_b",
+				"https://tukitama.com/tamacolle/resources/cg_loading_j" // 第五组
+			];
+
+			const errorImg = "data:image/svg+xml;utf8," +
+				encodeURIComponent(
+					'<svg xmlns="http://www.w3.org/2000/svg" width="300" height="240"><rect width="100%" height="100%" fill="#eee" /><text x="50%" y="50%" fill="#999" font-size="20" text-anchor="middle" dominant-baseline="middle">加载失败</text></svg>'
+					);
+
+			// ============================
+			// 渲染函数（主 + 备用 + 红色边框逻辑）
+			// ============================
+			function renderGroup(containerId, nums, mainPrefix, fallbackPrefix) {
+				const container = document.getElementById(containerId);
+
+				nums.forEach(num => {
+					const div = document.createElement("div");
+					div.className = "item";
+
+					const img = document.createElement("img");
+					const mainSrc = `${mainPrefix}${num}.png`;
+					const fallbackSrc = `${fallbackPrefix}${num}.png`;
+
+					// 先尝试主链接
+					img.src = mainSrc;
+					img.loading = "lazy";
+
+					img.onerror = () => {
+						// 主链接失败 → 新建 Image 测试备用链接
+						const testImg = new Image();
+						testImg.src = fallbackSrc;
+						testImg.onload = () => {
+							// 备用链接成功 → 页面 img 替换为备用链接，并加红色虚线边框
+							img.src = fallbackSrc;
+							img.style.border = "2px dashed red";
+						};
+						testImg.onerror = () => {
+							// 备用链接失败 → 占位图
+							img.src = errorImg;
+						};
+					};
+
+					img.onclick = () => window.open(img.src, "_blank");
+
+					const label = document.createElement("div");
+					label.className = "label";
+					label.textContent = num;
+
+					div.appendChild(img);
+					div.appendChild(label);
+					container.appendChild(div);
+				});
+			}
+
+			// ============================
+			// 渲染五组
+			// ============================
+			renderGroup("gridA", numsA, mainPrefixes[0], fallbackPrefixes[0]);
+			renderGroup("gridB", numsB, mainPrefixes[1], fallbackPrefixes[1]);
+			renderGroup("gridC", numsC, mainPrefixes[2], fallbackPrefixes[2]);
+			renderGroup("gridD", numsD, mainPrefixes[3], fallbackPrefixes[3]);
+			renderGroup("gridE", numsE, mainPrefixes[4], fallbackPrefixes[4]);
+		</script>
+	</body>
+</html>

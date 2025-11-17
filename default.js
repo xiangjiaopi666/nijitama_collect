@@ -1,5 +1,6 @@
 //地魂男儿
-const names = ["awn", "awt", "bic", "bin", "biz", "bun", "ckg", "ckz", "ecg", "ecz", "har", "hit", "hiz", "hyu", "iga", "iki", "ina",
+const names = ["awn", "awt", "bic", "bin", "biz", "bun", "ckg", "ckz", "ecg", "ecz", "har", "hit", "hiz", "hyu", "iga",
+	"iki", "ina",
 	"iwm",
 	"iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not", "oki", "osu", "oum", "owa", "sag",
 	"san", "sim", "sin", "smt", "smu", "suo", "sur", "taj", "tnb", "tos", "tou", "wak", "ymt", "yzm"
@@ -7,7 +8,8 @@ const names = ["awn", "awt", "bic", "bin", "biz", "bun", "ckg", "ckz", "ecg", "e
 //基础npc
 const names_npc = ["n000", "n001", "n002", "n003", "n004", "n005", "n006", "n007", "n008", "n009", "n010", "n011"];
 //妖兽
-const names_a = ["a000", "a001", "a002", "a003", "a005", "a006", "a007", "a011", "a012", "a015", "a016", "a018", "a019"];
+const names_a = ["a000", "a001", "a002", "a003", "a005", "a006", "a007", "a011", "a012", "a015", "a016", "a018",
+"a019"];
 //剧情人物
 const names_s = ["s000", "s001", "s002", "s003", "s004", "s005", "s006", "s007", "s008", "s008_kid", "s011", "s012",
 	"s013", "s014", "s015"
@@ -192,46 +194,46 @@ function select(name) {
 	// 创建新的 img 元素，设置 src 为点击图片的路径
 	// 将图片插入到对应容器
 	let fallbackAttempted = false; // 标志位，确保备用图像只尝试一次
-	
+
 	const avatarContainer = document.getElementById('character-avatar'); // 角色头像容器
 	avatarContainer.innerHTML = ''; // 清空之前的内容
-	
+
 	let characterImageSrc;
 	if (names.includes(name)) {
-	    // 地魂男儿
-	    characterImageSrc = Character_overview[names.indexOf(name)];
+		// 地魂男儿
+		characterImageSrc = Character_overview[names.indexOf(name)];
 	} else if (names_npc.includes(name)) {
-	    // NPC
-	    characterImageSrc = Character_overview_npc[names_npc.indexOf(name)];
+		// NPC
+		characterImageSrc = Character_overview_npc[names_npc.indexOf(name)];
 	} else if (names_a.includes(name)) {
-	    // 妖兽
-	    characterImageSrc = Character_overview_a[names_a.indexOf(name)];
+		// 妖兽
+		characterImageSrc = Character_overview_a[names_a.indexOf(name)];
 	} else if (names_s.includes(name)) {
-	    // 妖兽
-	    characterImageSrc = Character_overview_s[names_s.indexOf(name)];
+		// 妖兽
+		characterImageSrc = Character_overview_s[names_s.indexOf(name)];
 	}
-	
+
 	const avatarImage = document.createElement('img'); // 创建图片元素
 	avatarImage.src = characterImageSrc; // 尝试加载角色头像
-	
+
 	avatarImage.onerror = function() {
-	    if (!fallbackAttempted) { // 检查是否已经尝试过备用图像
-	        avatarImage.src = Character_def_face[names_all.indexOf(name) * 21 + 0]; // 使用默认表情图像
-	        console.log("该角色不存在默认头像，用第一张表情图代替");
-	        fallbackAttempted = true; // 标记备用图像已尝试
-	    }
+		if (!fallbackAttempted) { // 检查是否已经尝试过备用图像
+			avatarImage.src = Character_def_face[names_all.indexOf(name) * 21 + 0]; // 使用默认表情图像
+			console.log("该角色不存在默认头像，用第一张表情图代替");
+			fallbackAttempted = true; // 标记备用图像已尝试
+		}
 	};
-	
+
 	avatarContainer.appendChild(avatarImage);
-	
+
 	// 处理表情图容器
 	const defFaceContainer = document.getElementById('character-def-face'); // 表情图容器
 	defFaceContainer.innerHTML = ''; // 清空之前的表情图
 
-	
+
 	// 防止缓存，添加一个随机查询参数，确保每次加载时强制重新请求
-	const randomTimestamp = new Date().getTime();  // 获取当前时间戳，确保唯一性
-	
+	const randomTimestamp = new Date().getTime(); // 获取当前时间戳，确保唯一性
+
 	const skillContainer = document.getElementById('character-skill'); //技能
 	skillContainer.innerHTML = '';
 	const skillImageSrc = Character_skill[names_all.indexOf(name)];
@@ -239,17 +241,17 @@ function select(name) {
 	skillImage.src = skillImageSrc;
 	skillImage.src = `${skillImageSrc}?t=${randomTimestamp}`; // 添加时间戳以避免缓存
 	skillImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    skillImage.src = `https://tukitama.com/tamacolle/resources/c_${name}.png?t=${randomTimestamp}`; // 防止缓存
-	    skillImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    skillImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        skillImage.src = 'error/error_skill.png';
-	        skillImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		skillImage.src = `https://tukitama.com/tamacolle/resources/c_${name}.png?t=${randomTimestamp}`; // 防止缓存
+		skillImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		skillImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			skillImage.src = 'error/error_skill.png';
+			skillImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	skillContainer.appendChild(skillImage);
-	
+
 	const defaultbodyContainer = document.getElementById('character-default-body'); //默认1
 	defaultbodyContainer.innerHTML = ''; //默认1
 	const defaultbodyImageSrc = Character_def_body[names_all.indexOf(name)]; //默认1
@@ -257,15 +259,16 @@ function select(name) {
 	defaultbodyImage.src = defaultbodyImageSrc;
 	defaultbodyImage.src = `${defaultbodyImageSrc}?t=${randomTimestamp}`; // 添加时间戳以避免缓存
 	defaultbodyImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    defaultbodyImage.src = `https://tukitama.com/tamacolle/resources/s_${name}_def_body.png?t=${randomTimestamp}`;
-	    defaultbodyImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    defaultbodyImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        defaultbodyImage.src = 'error/error_defult_body.png';
-	        defaultbodyImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		defaultbodyImage.src =
+			`https://tukitama.com/tamacolle/resources/s_${name}_def_body.png?t=${randomTimestamp}`;
+		defaultbodyImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		defaultbodyImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			defaultbodyImage.src = 'error/error_defult_body.png';
+			defaultbodyImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	defaultbodyContainer.appendChild(defaultbodyImage); //默认1
 
@@ -277,15 +280,16 @@ function select(name) {
 	const defaultbodyfightImage = document.createElement('img'); //默认-战斗2
 	defaultbodyfightImage.src = defaultbodyfightImageSrc;
 	defaultbodyfightImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    defaultbodyfightImage.src = `https://tukitama.com/tamacolle/resources/b_${name}_def_body.png?t=${randomTimestamp}`;
-	    defaultbodyfightImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    defaultbodyfightImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        defaultbodyfightImage.src = 'error/error_defult_body_fight.png';
-	        defaultbodyfightImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		defaultbodyfightImage.src =
+			`https://tukitama.com/tamacolle/resources/b_${name}_def_body.png?t=${randomTimestamp}`;
+		defaultbodyfightImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		defaultbodyfightImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			defaultbodyfightImage.src = 'error/error_defult_body_fight.png';
+			defaultbodyfightImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	defaultbodyfightContainer.appendChild(defaultbodyfightImage); //默认-战斗2
 
@@ -296,15 +300,16 @@ function select(name) {
 	const defaultbodyfightinjuredImage = document.createElement('img'); //默认-战损3
 	defaultbodyfightinjuredImage.src = defaultbodyfightinjuredImageSrc;
 	defaultbodyfightinjuredImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    defaultbodyfightinjuredImage.src = `https://tukitama.com/tamacolle/resources/b_${name}_def_dbody.png?t=${randomTimestamp}`;
-	    defaultbodyfightinjuredImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    defaultbodyfightinjuredImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        defaultbodyfightinjuredImage.src = 'error/error_defult_body_fight_injured.png';
-	        defaultbodyfightinjuredImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		defaultbodyfightinjuredImage.src =
+			`https://tukitama.com/tamacolle/resources/b_${name}_def_dbody.png?t=${randomTimestamp}`;
+		defaultbodyfightinjuredImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		defaultbodyfightinjuredImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			defaultbodyfightinjuredImage.src = 'error/error_defult_body_fight_injured.png';
+			defaultbodyfightinjuredImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	defaultbodyfightinjuredContainer.appendChild(defaultbodyfightinjuredImage); //默认-战损3
 
@@ -315,15 +320,16 @@ function select(name) {
 	const character_ss_bodyImage = document.createElement('img'); //春夏服-站立4
 	character_ss_bodyImage.src = character_ss_bodyImageSrc;
 	character_ss_bodyImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    character_ss_bodyImage.src = `https://tukitama.com/tamacolle/resources/s_${name}_ss_body.png?t=${randomTimestamp}`;
-	    character_ss_bodyImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    character_ss_bodyImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        character_ss_bodyImage.src = 'error/error_ss_body.png';
-	        character_ss_bodyImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		character_ss_bodyImage.src =
+			`https://tukitama.com/tamacolle/resources/s_${name}_ss_body.png?t=${randomTimestamp}`;
+		character_ss_bodyImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		character_ss_bodyImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			character_ss_bodyImage.src = 'error/error_ss_body.png';
+			character_ss_bodyImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	character_ss_bodyContainer.appendChild(character_ss_bodyImage); //春夏服-站立4
 
@@ -334,15 +340,16 @@ function select(name) {
 	const character_b_ss_bodyImage = document.createElement('img'); //春夏服-战斗5
 	character_b_ss_bodyImage.src = character_b_ss_bodyImageSrc;
 	character_b_ss_bodyImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    character_b_ss_bodyImage.src = `https://tukitama.com/tamacolle/resources/b_${name}_ss_body.png?t=${randomTimestamp}`;
-	    character_b_ss_bodyImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    character_b_ss_bodyImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        character_b_ss_bodyImage.src = 'error/error_ss_body_fight.png';
-	        character_b_ss_bodyImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		character_b_ss_bodyImage.src =
+			`https://tukitama.com/tamacolle/resources/b_${name}_ss_body.png?t=${randomTimestamp}`;
+		character_b_ss_bodyImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		character_b_ss_bodyImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			character_b_ss_bodyImage.src = 'error/error_ss_body_fight.png';
+			character_b_ss_bodyImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	character_b_ss_bodyContainer.appendChild(character_b_ss_bodyImage); //春夏服-战斗5
 
@@ -353,15 +360,16 @@ function select(name) {
 	const character_b_ss_dbodyImage = document.createElement('img'); //春夏服-战损6
 	character_b_ss_dbodyImage.src = character_b_ss_dbodyImageSrc;
 	character_b_ss_dbodyImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    character_b_ss_dbodyImage.src = `https://tukitama.com/tamacolle/resources/b_${name}_ss_dbody.png?t=${randomTimestamp}`;
-	    character_b_ss_dbodyImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    character_b_ss_dbodyImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        character_b_ss_dbodyImage.src = 'error/error_ss_body_fight_injured.png';
-	        character_b_ss_dbodyImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		character_b_ss_dbodyImage.src =
+			`https://tukitama.com/tamacolle/resources/b_${name}_ss_dbody.png?t=${randomTimestamp}`;
+		character_b_ss_dbodyImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		character_b_ss_dbodyImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			character_b_ss_dbodyImage.src = 'error/error_ss_body_fight_injured.png';
+			character_b_ss_dbodyImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	character_b_ss_dbodyContainer.appendChild(character_b_ss_dbodyImage); //春夏服-战损6
 
@@ -372,15 +380,16 @@ function select(name) {
 	const character_aw_bodyImage = document.createElement('img'); //秋冬服-站立7
 	character_aw_bodyImage.src = character_aw_bodyImageSrc;
 	character_aw_bodyImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    character_aw_bodyImage.src = `https://tukitama.com/tamacolle/resources/s_${name}_aw_body.png?t=${randomTimestamp}`;
-	    character_aw_bodyImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    character_aw_bodyImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        character_aw_bodyImage.src = 'error/error_aw_body.png';
-	        character_aw_bodyImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		character_aw_bodyImage.src =
+			`https://tukitama.com/tamacolle/resources/s_${name}_aw_body.png?t=${randomTimestamp}`;
+		character_aw_bodyImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		character_aw_bodyImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			character_aw_bodyImage.src = 'error/error_aw_body.png';
+			character_aw_bodyImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	character_aw_bodyContainer.appendChild(character_aw_bodyImage); //秋冬服-站立7
 
@@ -391,15 +400,16 @@ function select(name) {
 	const character_b_aw_bodyImage = document.createElement('img'); //秋冬服-战斗8
 	character_b_aw_bodyImage.src = character_b_aw_bodyImageSrc;
 	character_b_aw_bodyImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    character_b_aw_bodyImage.src = `https://tukitama.com/tamacolle/resources/b_${name}_aw_body.png?t=${randomTimestamp}`;
-	    character_b_aw_bodyImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    character_b_aw_bodyImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        character_b_aw_bodyImage.src = 'error/error_aw_body_fight.png';
-	        character_b_aw_bodyImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		character_b_aw_bodyImage.src =
+			`https://tukitama.com/tamacolle/resources/b_${name}_aw_body.png?t=${randomTimestamp}`;
+		character_b_aw_bodyImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		character_b_aw_bodyImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			character_b_aw_bodyImage.src = 'error/error_aw_body_fight.png';
+			character_b_aw_bodyImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	character_b_aw_bodyContainer.appendChild(character_b_aw_bodyImage); //秋冬服-战斗8
 
@@ -410,15 +420,16 @@ function select(name) {
 	const character_b_aw_dbodyImage = document.createElement('img'); //秋冬服-战损9
 	character_b_aw_dbodyImage.src = character_b_aw_dbodyImageSrc;
 	character_b_aw_dbodyImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    character_b_aw_dbodyImage.src = `https://tukitama.com/tamacolle/resources/b_${name}_aw_dbody.png?t=${randomTimestamp}`;
-	    character_b_aw_dbodyImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    character_b_aw_dbodyImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        character_b_aw_dbodyImage.src = 'error/error_aw_body_fight_injured.png';
-	        character_b_aw_dbodyImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		character_b_aw_dbodyImage.src =
+			`https://tukitama.com/tamacolle/resources/b_${name}_aw_dbody.png?t=${randomTimestamp}`;
+		character_b_aw_dbodyImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		character_b_aw_dbodyImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			character_b_aw_dbodyImage.src = 'error/error_aw_body_fight_injured.png';
+			character_b_aw_dbodyImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	character_b_aw_dbodyContainer.appendChild(character_b_aw_dbodyImage); //秋冬服-战损9
 
@@ -429,15 +440,16 @@ function select(name) {
 	const character_sumoImage = document.createElement('img'); //相扑10
 	character_sumoImage.src = character_sumoImageSrc;
 	character_sumoImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    character_sumoImage.src = `https://tukitama.com/tamacolle/resources/s_${name}_sumo_body.png?t=${randomTimestamp}`;
-	    character_sumoImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    character_sumoImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        character_sumoImage.src = 'error/error_sumo.png';
-	        character_sumoImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		character_sumoImage.src =
+			`https://tukitama.com/tamacolle/resources/s_${name}_sumo_body.png?t=${randomTimestamp}`;
+		character_sumoImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		character_sumoImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			character_sumoImage.src = 'error/error_sumo.png';
+			character_sumoImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	character_sumoContainer.appendChild(character_sumoImage); //相扑10
 
@@ -448,15 +460,15 @@ function select(name) {
 	const bathImage = document.createElement('img'); //洗澡11
 	bathImage.src = bathImageSrc;
 	bathImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    bathImage.src = `https://tukitama.com/tamacolle/resources/s_${name}_bath_body.png?t=${randomTimestamp}`;
-	    bathImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    bathImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        bathImage.src = 'error/error_bath.png';
-	        bathImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		bathImage.src = `https://tukitama.com/tamacolle/resources/s_${name}_bath_body.png?t=${randomTimestamp}`;
+		bathImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		bathImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			bathImage.src = 'error/error_bath.png';
+			bathImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	bathContainer.appendChild(bathImage); //洗澡11
 
@@ -467,15 +479,16 @@ function select(name) {
 	const character_nyImage = document.createElement('img'); //新年12
 	character_nyImage.src = character_nyImageSrc;
 	character_nyImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    character_nyImage.src = `https://tukitama.com/tamacolle/resources/s_${name}_ny_body.png?t=${randomTimestamp}`;
-	    character_nyImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    character_nyImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        character_nyImage.src = 'error/error_ny.png';
-	        character_nyImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		character_nyImage.src =
+			`https://tukitama.com/tamacolle/resources/s_${name}_ny_body.png?t=${randomTimestamp}`;
+		character_nyImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		character_nyImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			character_nyImage.src = 'error/error_ny.png';
+			character_nyImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	character_nyContainer.appendChild(character_nyImage); //新年12
 
@@ -486,15 +499,15 @@ function select(name) {
 	const partronagImage = document.createElement('img'); //赞助13
 	partronagImage.src = partronagImageSrc;
 	partronagImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    partronagImage.src = `https://tukitama.com/tamacolle/resources/s_${name}_pa_body.png?t=${randomTimestamp}`;
-	    partronagImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    partronagImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        partronagImage.src = 'error/error_pa.png';
-	        partronagImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		partronagImage.src = `https://tukitama.com/tamacolle/resources/s_${name}_pa_body.png?t=${randomTimestamp}`;
+		partronagImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		partronagImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			partronagImage.src = 'error/error_pa.png';
+			partronagImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	partronagContainer.appendChild(partronagImage); //赞助13
 
@@ -505,15 +518,15 @@ function select(name) {
 	const swimImage = document.createElement('img'); //泳装14
 	swimImage.src = swimImageSrc;
 	swimImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    swimImage.src = `https://tukitama.com/tamacolle/resources/s_${name}_swim_body.png?t=${randomTimestamp}`;
-	    swimImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    swimImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        swimImage.src = 'error/error_swim.png';
-	        swimImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		swimImage.src = `https://tukitama.com/tamacolle/resources/s_${name}_swim_body.png?t=${randomTimestamp}`;
+		swimImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		swimImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			swimImage.src = 'error/error_swim.png';
+			swimImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	swimContainer.appendChild(swimImage); //泳装14
 
@@ -524,15 +537,16 @@ function select(name) {
 	const christmasImage = document.createElement('img'); //圣诞节15
 	christmasImage.src = christmasImageSrc;
 	christmasImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    christmasImage.src = `https://tukitama.com/tamacolle/resources/s_${name}_xmas_body.png?t=${randomTimestamp}`;
-	    christmasImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    christmasImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        christmasImage.src = 'error/error_xmas.png';
-	        christmasImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		christmasImage.src =
+		`https://tukitama.com/tamacolle/resources/s_${name}_xmas_body.png?t=${randomTimestamp}`;
+		christmasImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		christmasImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			christmasImage.src = 'error/error_xmas.png';
+			christmasImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	christmasContainer.appendChild(christmasImage); //圣诞节15
 
@@ -543,15 +557,15 @@ function select(name) {
 	const evImage = document.createElement('img'); //情人节16
 	evImage.src = evImageSrc;
 	evImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    evImage.src = `https://tukitama.com/tamacolle/resources/s_${name}_ev_body.png?t=${randomTimestamp}`;
-	    evImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    evImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        evImage.src = 'error/error_ev.png';
-	        evImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		evImage.src = `https://tukitama.com/tamacolle/resources/s_${name}_ev_body.png?t=${randomTimestamp}`;
+		evImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		evImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			evImage.src = 'error/error_ev.png';
+			evImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	evContainer.appendChild(evImage); //情人节16
 
@@ -562,15 +576,15 @@ function select(name) {
 	const skin1Image = document.createElement('img'); //职业装17
 	skin1Image.src = skin1ImageSrc;
 	skin1Image.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    skin1Image.src = `https://tukitama.com/tamacolle/resources/s_${name}_skin1_body.png?t=${randomTimestamp}`;
-	    skin1Image.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    skin1Image.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        skin1Image.src = 'error/error_skin1_body.png';
-	        skin1Image.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		skin1Image.src = `https://tukitama.com/tamacolle/resources/s_${name}_skin1_body.png?t=${randomTimestamp}`;
+		skin1Image.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		skin1Image.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			skin1Image.src = 'error/error_skin1_body.png';
+			skin1Image.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	skin1Container.appendChild(skin1Image); //职业装17
 
@@ -581,15 +595,16 @@ function select(name) {
 	const character_y_bathImage = document.createElement('img'); //浴室18
 	character_y_bathImage.src = character_y_bathImageSrc;
 	character_y_bathImage.onerror = function() {
-	    // 如果原图加载失败，尝试使用新的 URL 格式
-	    character_y_bathImage.src = `https://tukitama.com/tamacolle/resources/y_${name}_body.png?t=${randomTimestamp}`;
-	    character_y_bathImage.style.border = '5px dashed red'; // 设置为红色虚线边框
-	    // 重新设置 onerror，处理新的 URL 如果也失败
-	    character_y_bathImage.onerror = function() {
-	        // 如果新的 URL 也加载失败，设置为默认错误图像
-	        character_y_bathImage.src = 'error/error_y_body.png';
-	        character_y_bathImage.style.border = '1px dashed white'; // 默认错误图像的边框
-	    };
+		// 如果原图加载失败，尝试使用新的 URL 格式
+		character_y_bathImage.src =
+			`https://tukitama.com/tamacolle/resources/y_${name}_body.png?t=${randomTimestamp}`;
+		character_y_bathImage.style.border = '5px dashed red'; // 设置为红色虚线边框
+		// 重新设置 onerror，处理新的 URL 如果也失败
+		character_y_bathImage.onerror = function() {
+			// 如果新的 URL 也加载失败，设置为默认错误图像
+			character_y_bathImage.src = 'error/error_y_body.png';
+			character_y_bathImage.style.border = '1px dashed white'; // 默认错误图像的边框
+		};
 	};
 	character_y_bathContainer.appendChild(character_y_bathImage); //浴室18
 
