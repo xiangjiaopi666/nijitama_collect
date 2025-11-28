@@ -1,0 +1,266 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>全角色搜索</title>
+		<style>
+			body {
+				font-family: sans-serif;
+				padding: 10px;
+			}
+
+			/* 状态与进度条 */
+			#progress-wrapper {
+				position: sticky;
+				top: 0;
+				z-index: 999;
+				margin-bottom: 12px;
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				transition: opacity 0.5s ease;
+			}
+
+			#progress-container {
+				flex: 1;
+				background: #ccc;
+				border-radius: 6px;
+				overflow: hidden;
+				height: 16px;
+				position: relative;
+			}
+
+			#progress {
+				height: 100%;
+				background: linear-gradient(90deg, #4caf50, #81c784);
+				width: 0%;
+				transition: width .2s ease, background-position .5s linear;
+				border-radius: 6px 0 0 6px;
+				text-align: center;
+				color: white;
+				font-size: 12px;
+				line-height: 16px;
+				white-space: nowrap;
+				overflow: hidden;
+				background-size: 200% 100%;
+				background-position: 0 0;
+				animation: shine 2s linear infinite;
+			}
+
+			@keyframes shine {
+				0% {
+					background-position: 0 0;
+				}
+
+				100% {
+					background-position: -200% 0;
+				}
+			}
+
+			#status {
+				min-width: 120px;
+				font-size: 14px;
+			}
+
+			#box {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 12px;
+			}
+
+			.img-container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				width: 120px;
+				cursor: pointer;
+			}
+
+			.img-container img {
+				width: 120px;
+				opacity: 0;
+				/* 初始透明，加载完成再显示 */
+				transition: opacity .25s;
+			}
+
+			.img-container img.loaded {
+				opacity: 1;
+			}
+
+			.img-label {
+				margin-top: 4px;
+				font-size: 12px;
+				text-align: center;
+				word-break: break-word;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div id="progress-wrapper">
+			<div id="progress-container">
+				<div id="progress">0%</div>
+			</div>
+			<div id="status">已成功加载图片: 0</div>
+		</div>
+		<div id="box"></div>
+
+		<script>
+			const ORIGIN_URL = "https://tukitama.com/tamacolle/resources/s_aaa_def_body.png";
+			const BATCH = 40;
+
+			// 生成所有三字母组合
+			function genTriples() {
+				const out = [];
+				for (let a = 0; a < 26; a++)
+					for (let b = 0; b < 26; b++)
+						for (let c = 0; c < 26; c++)
+							out.push(String.fromCharCode(97 + a) + String.fromCharCode(97 + b) + String.fromCharCode(97 + c));
+				return out;
+			}
+
+			const list = genTriples();
+			const TOTAL = list.length;
+
+			const box = document.getElementById('box');
+			const progressWrapper = document.getElementById('progress-wrapper');
+			const progressBar = document.getElementById('progress');
+			const status = document.getElementById('status');
+
+			let processedCount = 0;
+			let successCount = 0;
+
+			function updateProgress() {
+				const percent = Math.round(processedCount / TOTAL * 100);
+				progressBar.style.width = percent + '%';
+				progressBar.textContent = percent + '%';
+				status.textContent = `已成功加载图片: ${successCount}`;
+
+				if (percent >= 100) {
+					progressWrapper.style.opacity = 0;
+					setTimeout(() => progressWrapper.style.display = 'none', 500);
+				}
+			}
+
+			// 检查图片是否存在
+			async function headCheck(url) {
+				try {
+					const res = await fetch(url, {
+						method: 'HEAD'
+					});
+					if (!res.ok) return {
+						ok: false,
+						contentType: ''
+					};
+					const type = res.headers.get('content-type') || '';
+					return {
+						ok: true,
+						contentType: type
+					};
+				} catch (e) {
+					return null;
+				}
+			}
+
+			// 创建并插入图片
+			async function createAndInsert(code) {
+				const originUrl = ORIGIN_URL.replace('aaa', code);
+				const headOrigin = await headCheck(originUrl);
+
+				if (!headOrigin || !headOrigin.ok || !headOrigin.contentType.startsWith('image/')) {
+					processedCount++;
+					updateProgress();
+					return null;
+				}
+
+				const container = document.createElement('div');
+				container.className = 'img-container';
+
+				const img = document.createElement('img');
+				img.src = originUrl;
+				img.onload = () => {
+					img.classList.add('loaded');
+					successCount++;
+					const label = container.querySelector('.img-label');
+					label.textContent = `${successCount}: ${code}`;
+
+					if (successCount === 1) box.insertBefore(container, box.firstChild);
+					else {
+						const ref = box.children[successCount - 2];
+						if (ref) ref.after(container);
+						else box.appendChild(container);
+					}
+					updateProgress();
+				};
+
+				img.onerror = () => container.remove();
+
+				const label = document.createElement('div');
+				label.className = 'img-label';
+
+				container.appendChild(img);
+				container.appendChild(label);
+
+				// 点击打开新页面显示原图和编码
+				container.addEventListener('click', () => {
+					const newWindow = window.open('', '_blank');
+					if (!newWindow) return;
+					newWindow.document.write(`
+			<!doctype html>
+			<html>
+			<head>
+				<meta charset="utf-8">
+				<title>${code}</title>
+				<style>
+					body { font-family: sans-serif; padding: 20px; text-align: center; }
+					h1 { margin-bottom: 20px; }
+					img { max-width: 90%; height: auto; border: 1px solid #ccc; }
+				</style>
+			</head>
+			<body>
+				<h1>${code}</h1>
+				<img src="${originUrl}" alt="${code}">
+			</body>
+			</html>
+		`);
+					newWindow.document.close();
+				});
+
+				processedCount++;
+				updateProgress();
+				return container;
+			}
+
+			// 分批加载
+			let idx = 0;
+
+			function loadBatch() {
+				const tasks = [];
+				for (let i = 0; i < BATCH && idx < TOTAL; i++, idx++) {
+					tasks.push(createAndInsert(list[idx]));
+				}
+				Promise.all(tasks).then(results => {
+					results.forEach(container => {
+						if (container && !container.parentElement) box.appendChild(container);
+					});
+					if (idx < TOTAL) requestIdleCallback(loadBatch);
+				});
+			}
+
+			loadBatch();
+
+			// 页面加载完成后重新整理序号
+			window.addEventListener('load', () => {
+				const containers = document.querySelectorAll('.img-container');
+				containers.forEach((container, index) => {
+					const label = container.querySelector('.img-label');
+					const code = label.textContent.split(': ')[1] || '';
+					label.textContent = `${index + 1}: ${code}`;
+				});
+				successCount = containers.length;
+				updateProgress();
+			});
+		</script>
+
+	</body>
+</html>
