@@ -12,7 +12,7 @@ const names_a = ["a000", "a001", "a002", "a003", "a005", "a006", "a007", "a011",
 "a019"];
 //剧情人物
 const names_s = ["s000", "s001", "s002", "s003", "s004", "s005", "s006", "s007", "s008", "s008_kid", "s011", "s012",
-	"s013", "s014", "s015"
+	"s013", "s014", "s015", "s016"
 ];
 //汇总
 const names_all = names.concat(names_npc, names_a, names_s);
