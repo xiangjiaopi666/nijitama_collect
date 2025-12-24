@@ -1,15 +1,15 @@
 //地魂男儿
 const names = ["awn", "awt", "bic", "bin", "biz", "bun", "ckg", "ckz", "ecg", "ecz", "har", "hit", "hiz", "hyu", "iga",
-	"iki", "ina",
-	"iwm",
-	"iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not", "oki", "osu", "oum", "owa", "sag",
-	"san", "sim", "sin", "smt", "smu", "suo", "sur", "taj", "tnb", "tos", "tou", "wak", "ymt", "yzm"
+	"iki", "ina", "iwm", "iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not", "oki", "osu",
+	"oum", "owa", "sag", "san", "sim", "sin", "smt", "smu", "suo", "sur", "taj", "tnb", "tos", "tou", "wak", "ymt",
+	"yzm"
 ];
 //基础npc
 const names_npc = ["n000", "n001", "n002", "n003", "n004", "n005", "n006", "n007", "n008", "n009", "n010", "n011"];
 //妖兽
 const names_a = ["a000", "a001", "a002", "a003", "a005", "a006", "a007", "a011", "a012", "a015", "a016", "a018",
-"a019"];
+	"a019"
+];
 //剧情人物
 const names_s = ["s000", "s001", "s002", "s003", "s004", "s005", "s006", "s007", "s008", "s008_kid", "s011", "s012",
 	"s013", "s014", "s015", "s016"
@@ -539,7 +539,7 @@ function select(name) {
 	christmasImage.onerror = function() {
 		// 如果原图加载失败，尝试使用新的 URL 格式
 		christmasImage.src =
-		`https://tukitama.com/tamacolle/resources/s_${name}_xmas_body.png?t=${randomTimestamp}`;
+			`https://tukitama.com/tamacolle/resources/s_${name}_xmas_body.png?t=${randomTimestamp}`;
 		christmasImage.style.border = '5px dashed red'; // 设置为红色虚线边框
 		// 重新设置 onerror，处理新的 URL 如果也失败
 		christmasImage.onerror = function() {
