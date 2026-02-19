@@ -60,7 +60,16 @@ function Loadview_img_tmb() {
 			'view/tm_b/tm_b0046.png',
 			'view/tm_b/tm_b0047.png',
 			'view/tm_b/tm_b0048.png',
-			'view/tm_b/tm_b0049.png'
+			'view/tm_b/tm_b0049.png',
+			'view/tm_b/tm_b0050.png',
+			'view/tm_b/tm_b0051.png',
+			'view/tm_b/tm_b0052.png',
+			'view/tm_b/tm_b0053.png',
+			'view/tm_b/tm_b0054.png',
+			'view/tm_b/tm_b0055.png',
+			'view/tm_b/tm_b0056.png',
+			'view/tm_b/tm_b0057.png',
+			'view/tm_b/tm_b0058.png'
 		];
 
 		// 创建一个新的div容器来存放图片
@@ -200,7 +209,8 @@ function Loadview_img_tms() {
 			'view/tm_s/tm_s0003.png',
 			'view/tm_s/tm_s0004.png',
 			'view/tm_s/tm_s0005.png',
-			'view/tm_s/tm_s0006.png'
+			'view/tm_s/tm_s0006.png',
+			'view/tm_s/tm_s0007.png'
 		];
 
 		// 创建一个新的div容器来存放图片
