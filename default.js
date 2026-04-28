@@ -1,7 +1,7 @@
 //地魂男儿
 const names = ["awn", "awt", "bic", "bin", "biz", "bun", "ckg", "ckz", "ecg", "ecz", "har", "hit", "hiz", "hyu", "iga",
 	"iki", "ina", "iwm", "iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not", "oki", "osu",
-	"oum", "owa", "sag", "san", "sim", "sin", "smt", "smu", "suo", "sur", "taj", "tnb", "tos", "tou", "wak", "ymt",
+	"oum", "owa", "sag", "san", "sim", "sin", "smt", "smu", "suo", "sur", "taj", "tnb", "tos", "tou", "wak", "yms", "ymt",
 	"yzm"
 ];
 //基础npc
