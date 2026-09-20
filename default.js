@@ -1,13 +1,13 @@
 //地魂男儿
-const names = ["awn", "awt", "bic", "bin", "biz", "bun", "ckg", "ckz", "ecg", "ecz", "har", "hit", "hiz", "hyu", "iga",
+const names = ["awn", "awt", "bic", "bin", "biz", "bun", "ckg", "ckz", "ecg", "ecz", "har", "hit", "hou", "hiz", "hyu", "iga",
 	"iki", "ina", "iwm", "iyo", "izu", "kag", "kai", "kaw", "kaz", "kii", "mik", "mus", "nag", "not", "oki", "osu",
-	"oum", "owa", "sag", "san", "sim", "sin", "smt", "smu", "suo", "sur", "taj", "tnb", "tos", "tou", "wak", "yms", "ymt",
+	"oum", "owa", "rko", "sag", "san", "sat", "sim", "sin", "smt", "smu", "suo", "sur", "taj", "tnb", "tos", "tou", "wak", "yms", "ymt",
 	"yzm"
 ];
 //基础npc
 const names_npc = ["n000", "n001", "n002", "n003", "n004", "n005", "n006", "n007", "n008", "n009", "n010", "n011"];
 //妖兽
-const names_a = ["a000", "a001", "a002", "a003", "a005", "a006", "a007", "a011", "a012", "a015", "a016", "a018",
+const names_a = ["a000", "a001", "a002", "a003", "a004", "a005", "a006", "a007", "a011", "a012", "a015", "a016", "a018",
 	"a019"
 ];
 //剧情人物
